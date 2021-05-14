@@ -1,0 +1,5 @@
+new -s dev -n dev
+neww -n dev 'nvim'
+split-window -v -p 25
+split-window -h 'htop -M -t'
+selectp -t 0
