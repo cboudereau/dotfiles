@@ -1,0 +1,63 @@
+set encoding=UTF-8
+
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
+
+" Make sure you use single quotes
+
+" On-demand loading
+Plug 'scrooloose/nerdtree'
+Plug 'ryanoasis/vim-devicons'
+
+" rust
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+let g:LanguageClient_serverCommands = {
+    \ 'go': ['~/go/bin/gopls'],
+    \ 'rust': ['rustup' ,'run', 'nightly', 'rust-analyzer'],
+    \ }
+
+" Run gofmt on save
+autocmd BufWritePre *.rs :call LanguageClient#textDocument_formatting_sync()
+
+" note that if you are using Plug mapping you should not use `noremap` mappings.
+nmap <F5> <Plug>(lcn-menu)
+nmap <silent> gd <Plug>(lcn-definition)
+
+
+" autocomplete
+" assuming you're using vim-plug: https://github.com/junegunn/vim-plug
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+
+" enable ncm2 for all buffers
+autocmd BufEnter * call ncm2#enable_for_buffer()
+
+" IMPORTANT: :help Ncm2PopupOpen for more information
+set completeopt=noinsert,menuone,noselect
+
+" NOTE: you need to install completion sources to get completions. Check
+" our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+
+
+
+" (Optional) Multi-entry selection UI.
+Plug 'junegunn/fzf'
+
+" Initialize plugin system
+call plug#end()
+
+let g:NERDTreeShowHidden = 1
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeIgnore = []
+let g:NERDTreeStatusline = ''
+
+" Toggle
+nnoremap <silent> <C-b> :NERDTreeToggle<CR>
