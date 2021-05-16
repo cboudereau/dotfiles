@@ -1,3 +1,4 @@
+set number
 set encoding=UTF-8
 
 " Specify a directory for plugins
@@ -22,8 +23,8 @@ let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup' ,'run', 'nightly', 'rust-analyzer'],
     \ }
 
-" Run gofmt on save
-autocmd BufWritePre *.rs :call LanguageClient#textDocument_formatting_sync()
+" Run fmt on save
+autocmd BufWritePre *.go,*.rs :call LanguageClient#textDocument_formatting_sync()
 
 " note that if you are using Plug mapping you should not use `noremap` mappings.
 nmap <F5> <Plug>(lcn-menu)
