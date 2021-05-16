@@ -1,5 +1,5 @@
-new -s dev -n dev
-neww -n dev 'nvim'
+rename-session dev
+send-keys -t 0 'nvim' ENTER
 split-window -v -p 25
 split-window -h 'htop -M -t'
 selectp -t 0
