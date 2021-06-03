@@ -17,6 +17,8 @@ base0D='#6A9FB5' # - Functions, Methods, Attribute IDs, Headings
 base0E='#AA759F' # - Keywords, Storage, Selector, Markup Italic, Diff Changed
 base0F='#8F5536' # - Deprecated, Opening/Closing Embedded Language Tags, e.g. <? php ?>
 
+set-option -g status-position top
+
 set -g status-left-length 32
 set -g status-right-length 250
 

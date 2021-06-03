@@ -4,7 +4,7 @@ set encoding=UTF-8
 " Specify a directory for plugins
 " - For Neovim: stdpath('data') . '/plugged'
 " - Avoid using standard Vim directory names like 'plugin'
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.nvim/plugged')
 
 " Make sure you use single quotes
 
@@ -19,9 +19,15 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ }
 
 let g:LanguageClient_serverCommands = {
-    \ 'go': ['~/go/bin/gopls'],
+    \ 'go': ['gopls'],
     \ 'rust': ['rustup' ,'run', 'nightly', 'rust-analyzer'],
     \ }
+
+" debug
+" let g:LanguageClient_waitOutputTimeout = 60
+" let $LANGUAGECLIENT_DEBUG=1
+" let g:LanguageClient_loggingLevel='DEBUG'
+" let g:LanguageClient_loggingFile =  expand('~/LanguageClient.log') 
 
 " Run fmt on save
 autocmd BufWritePre *.go,*.rs :call LanguageClient#textDocument_formatting_sync()
