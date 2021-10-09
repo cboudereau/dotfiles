@@ -1,5 +1,5 @@
 # sessions
-bind s source-file ~/.tmux/sessions/dev
+bind s source-file ~/.tmux/sessions/clem
 
 # reload config file
 bind r source-file ~/.tmux.conf \; display "Config Reloaded!"
