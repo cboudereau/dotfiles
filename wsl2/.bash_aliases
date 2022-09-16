@@ -1,0 +1,5 @@
+alias git='/mnt/c/Users/cboudereau/bin/Git/bin/git.exe'
+alias g='/mnt/c/Users/cboudereau/bin/Git/bin/git.exe'
+alias ssh='/mnt/c/Windows/System32/OpenSSH/ssh.exe'
+alias d='docker'
+alias dc='docker compose'
