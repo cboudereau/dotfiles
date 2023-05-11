@@ -1,2 +1,5 @@
 @echo off
-ubuntu2204 run -- docker %*
+set rp=%cd:~3%
+set rp=/mnt/c/%rp:\=/%
+
+bash -c "cd %rp% && docker "%*
