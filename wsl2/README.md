@@ -17,5 +17,6 @@ git and ssh comes from windows and linked through bash_aliases
 
 ## docker
 - add wsl2 Ubuntu distro
-- Check that systemd is correctly installed : https://learn.microsoft.com/en-us/windows/wsl/wsl-config#systemd-support
-- Setup docker for ubuntu : https://docs.docker.com/engine/install/ubuntu/
+- check that systemd is correctly installed : https://learn.microsoft.com/en-us/windows/wsl/wsl-config#systemd-support
+- setup docker for ubuntu : https://docs.docker.com/engine/install/ubuntu/
+- to run docker and docker compose from any windows shell, add .scripts to PATH
