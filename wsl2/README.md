@@ -2,15 +2,15 @@
 
 ## tmux conf
 ```bash
-apt install -y acpi
+sudo apt update -y && sudo apt install -y tmux acpi
 ln -s .tmux/tmux.conf.symlink .tmux.conf
 ```
 
 ## other app home folders
 ```bash
-ln -s /mnt/c/Users/cboudereau/.aws .aws
-ln -s /mnt/c/Users/cboudereau/.azure .azure
-ln -s /mnt/c/Users/cboudereau/.gcloud .gcloud
+ln -s /mnt/c/Users/cboudereau/.aws ~/.aws
+ln -s /mnt/c/Users/cboudereau/.azure ~/.azure
+ln -s /mnt/c/Users/cboudereau/.gcloud ~/.gcloud
 ```
 
 ## bash aliases
