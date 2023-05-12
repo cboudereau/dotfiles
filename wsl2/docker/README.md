@@ -65,7 +65,7 @@ nerdctl run --rm -it ubuntu bash
 
 #### wsl2
 ```bash
-wsl -v
+>wsl -v
 WSL version: 1.2.5.0
 Kernel version: 5.15.90.1
 WSLg version: 1.0.51
@@ -76,7 +76,7 @@ Windows version: 10.0.19045.2965
 ```
 
 ```bash
-wsl -l -v
+>wsl -l -v
   NAME            STATE           VERSION
 * Ubuntu-22.04    Stopped         2
 ```
