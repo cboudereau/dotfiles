@@ -75,6 +75,12 @@ DXCore version: 10.0.25131.1002-220531-1700.rs-onecore-base2-hyp
 Windows version: 10.0.19045.2965
 ```
 
+```bash
+wsl -l -v
+  NAME            STATE           VERSION
+* Ubuntu-22.04    Stopped         2
+```
+
 ### container benchmark
 
 replace docker by nerdctl for rancher desktop and containerd setup
