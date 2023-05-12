@@ -19,7 +19,7 @@ eps : event per second
 |-|-|-|-|-|
 | native | containerd | 1953.37 eps | 6442.59 MiB/s | read: 39.57 MiB/s / write: 26.38 MiB/s  | 
 | rancher desktop | dockerd | 1946.26 eps | 5296.50 MiB/s | read: 38.44 MiB/s / write: 25.96 MiB/s |
-| rancher desktop | containerd | 1920.96 eps | 4831.14 MiB/s | read: 36.58 MiB/s write: 24.39 MiB/s |
+| rancher desktop | containerd | 1920.96 eps | 4831.14 MiB/s | read: 36.58 MiB/s / write: 24.39 MiB/s |
 
 ## native
 
