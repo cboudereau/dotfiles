@@ -1,7 +1,7 @@
 # docker setup
 ## TL;DR 
 
-wsl2 and native tools are standard. The init time is far better (<5s instead of >1mn) and the memory is also better managed (since everything is setup on only one wsl distro instead of 2) but additional scripts should be configured to be available from any windows shell.
+wsl2 and native tools are standard. The init time is far better (<5s instead of >1mn) and the memory is also managed better (since everything is setup on only one wsl distro instead of 2) but additional scripts should be configured to be available from any windows shell.
 
 Only the LCOW (Linux Container On Windows) has been tested.
 
@@ -9,17 +9,17 @@ The .scripts folder contains docker and docker-compose cli integration for windo
 
 | setup | container runtime | init time | complexity | usability | k3s | compose | internet |
 |-|-|-|-|-|-|-|-|
-| native | containerd | < 5s | S | S | yes | yes | yes |
-| rancher desktop | dockerd | > 1mn | M | L | yes | yes | yes |
-| rancher desktop | containerd | > 1mn | M | L | yes | yes | no |
+| native | containerd | < 5s | 1 | 8 | yes | yes | yes |
+| rancher desktop | dockerd | > 1mn | 5 | 3 | yes | yes | yes |
+| rancher desktop | containerd | > 1mn | 5 | 5 | yes | yes | no |
 
 eps : event per second
 
-|  | container runtime | cpu | memory | io |
+|  | container runtime | cpu | memory | file io |
 |-|-|-|-|-|
-| native | containerd | 1953.37 eps | 6442.59 MiB/sec | read: 39.57 MiB/s / write: 26.38 MiB/s  | 
-| rancher desktop | dockerd | 1946.26 eps | 5296.50 MiB/sec | read: 38.44 MiB/s / write: 25.96 MiB/s |
-| rancher desktop | containerd | 1920.96 eps | 4831.14 MiB/sec| read: 36.58 MiB/s write: 24.39 MiB/s |
+| native | containerd | 1953.37 eps | 6442.59 MiB/s | read: 39.57 MiB/s / write: 26.38 MiB/s  | 
+| rancher desktop | dockerd | 1946.26 eps | 5296.50 MiB/s | read: 38.44 MiB/s / write: 25.96 MiB/s |
+| rancher desktop | containerd | 1920.96 eps | 4831.14 MiB/s | read: 36.58 MiB/s write: 24.39 MiB/s |
 
 ## native
 
