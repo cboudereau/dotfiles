@@ -1,7 +1,7 @@
 # docker setup
 ## TL;DR 
 
-wsl2 and native tools are standard. The init time is far better (<5s instead of >1mn) and the memory is also better managed (since everything is only one wsl distro instead of 2) but additional scripts should be configured to be available from any windows shell.
+wsl2 and native tools are standard. The init time is far better (<5s instead of >1mn) and the memory is also better managed (since everything is setup on only one wsl distro instead of 2) but additional scripts should be configured to be available from any windows shell.
 
 Only the LCOW (Linux Container On Windows) has been tested.
 
