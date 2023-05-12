@@ -2,7 +2,7 @@
 
 FROM ubuntu:22.04
 
-RUN apt-get update -y && apt install -y sysbench
+RUN apt update -y && apt install -y sysbench
 
 ENTRYPOINT ["sysbench"]
 
