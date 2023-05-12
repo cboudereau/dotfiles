@@ -27,6 +27,17 @@ Native install consists of installing wsl2 with ubuntu distro (or any distro hav
 
 k3s test is on going, only the setup has been validated at the time of writing
 
+### docker setup
+- add wsl2 Ubuntu distro
+- check that systemd is correctly installed : https://learn.microsoft.com/en-us/windows/wsl/wsl-config#systemd-support
+- setup docker for ubuntu : https://docs.docker.com/engine/install/ubuntu/
+- to run docker and docker compose from any windows shell, add .scripts to PATH
+
+### k3s setup
+```bash
+curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" sh -s -
+```
+
 ## rancher desktop
 
 ### dockerd
@@ -59,11 +70,6 @@ Direct3D version: 1.608.2-61064218
 DXCore version: 10.0.25131.1002-220531-1700.rs-onecore-base2-hyp
 Windows version: 10.0.19045.2965
 ```
-
-### tool benchmark
-
-Native (wsl2 only) install is recommended since LCOW install is like having a true linux OS.
-To have the docker cli available locally, .scripts can be added to PATH
 
 ### container benchmark
 
