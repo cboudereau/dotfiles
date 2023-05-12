@@ -33,6 +33,10 @@ k3s test is on going, only the setup has been validated at the time of writing
 - check that systemd is correctly installed : https://learn.microsoft.com/en-us/windows/wsl/wsl-config#systemd-support
 - to run docker and docker compose from any windows shell, add .scripts to PATH
 
+```bash
+sudo usermod -aG docker $USER
+```
+
 ### k3s setup
 ```bash
 curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" sh -s -
