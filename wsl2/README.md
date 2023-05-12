@@ -3,7 +3,7 @@
 ## tmux conf
 ```bash
 sudo apt update -y && sudo apt install -y tmux acpi
-ln -s .tmux/tmux.conf.symlink .tmux.conf
+ln -s .tmux/tmux.conf.symlink ~/.tmux.conf
 ```
 
 ## other app home folders
