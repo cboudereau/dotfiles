@@ -1,2 +1,2 @@
-@echo off
-wsl --cd %cd% -e bash -c "docker "%*
+@echo on
+wsl --cd %cd% -e bash -c "docker %*"
