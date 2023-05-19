@@ -2,7 +2,7 @@
 
 ## tmux conf
 ```bash
-sudo apt update -y && sudo apt install -y tmux acpi graphviz
+sudo apt update -y && sudo apt install -y tmux acpi graphviz cmatrix
 ln -s .tmux/tmux.conf.symlink ~/.tmux.conf
 ```
 
