@@ -2,7 +2,7 @@
 
 ## tmux conf
 ```bash
-sudo apt update -y && sudo apt install -y tmux acpi graphviz cmatrix
+sudo apt update -y && sudo apt install -y tmux acpi graphviz cmatrix nethogs
 ln -s .tmux/tmux.conf.symlink ~/.tmux.conf
 ```
 
@@ -11,6 +11,11 @@ ln -s .tmux/tmux.conf.symlink ~/.tmux.conf
 ln -s /mnt/c/Users/cboudereau/.aws ~/.aws
 ln -s /mnt/c/Users/cboudereau/.azure ~/.azure
 ln -s /mnt/c/Users/cboudereau/.gcloud ~/.gcloud
+```
+
+## nethogs conf
+```bash
+sudo setcap "cap_net_admin,cap_net_raw=ep" /usr/sbin/nethogs
 ```
 
 ## bash aliases
