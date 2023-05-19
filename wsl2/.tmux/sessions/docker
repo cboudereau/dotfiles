@@ -1,0 +1,10 @@
+rename-session docker
+send-keys C-z '/usr/bin/htop' Enter
+split-window -v /usr/sbin/nethogs
+split-window -v /usr/bin/docker stats
+split-window -v
+split-window -v
+split-window -v
+split-window -v
+select-layout tiled
+display "Welcome on board clem!"
