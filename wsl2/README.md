@@ -13,9 +13,9 @@ ln -s /mnt/c/Users/cboudereau/.azure ~/.azure
 ln -s /mnt/c/Users/cboudereau/.gcloud ~/.gcloud
 ```
 
-## nethogs conf
+## iftop conf
 ```bash
-sudo setcap "cap_net_admin,cap_net_raw=ep" /usr/sbin/nethogs
+sudo setcap "cap_net_admin,cap_net_raw=ep" /usr/sbin/iftop
 ```
 
 ## bash aliases
