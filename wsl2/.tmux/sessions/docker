@@ -1,6 +1,6 @@
 rename-session docker
 send-keys C-z '/usr/bin/htop' Enter
-split-window -v /usr/sbin/nethogs
+split-window -v /usr/sbin/iftop
 split-window -v /usr/bin/docker stats
 split-window -v
 split-window -v
