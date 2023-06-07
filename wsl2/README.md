@@ -8,9 +8,11 @@ ln -s .tmux/tmux.conf.symlink ~/.tmux.conf
 
 ## other app home folders
 ```bash
-ln -s /mnt/c/Users/$(whoami.exe | cut -d "\\" -f 2)/.aws ~/.aws
-ln -s /mnt/c/Users/$(whoami.exe | cut -d "\\" -f 2)/.azure ~/.azure
-ln -s /mnt/c/Users/$(whoami.exe | cut -d "\\" -f 2)/.gcloud ~/.gcloud
+WINDOWS_USERNAME=$(whoami.exe | cut -d "\\" -f 2 | tr -d '\r') && pushd /mnt/c/Users/$WINDOWS_USERNAME
+ln -s $(pwd)/.aws ~/.aws
+ln -s $(pwd)/.azure ~/.azure
+ln -s $(pwd)/.gcloud ~/.gcloud
+popd
 ```
 
 ## iftop conf
