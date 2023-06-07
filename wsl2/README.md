@@ -8,9 +8,9 @@ ln -s .tmux/tmux.conf.symlink ~/.tmux.conf
 
 ## other app home folders
 ```bash
-ln -s /mnt/c/Users/cboudereau/.aws ~/.aws
-ln -s /mnt/c/Users/cboudereau/.azure ~/.azure
-ln -s /mnt/c/Users/cboudereau/.gcloud ~/.gcloud
+ln -s /mnt/c/Users/$(whoami.exe | cut -d "\\" -f 2)/.aws ~/.aws
+ln -s /mnt/c/Users/$(whoami.exe | cut -d "\\" -f 2)/.azure ~/.azure
+ln -s /mnt/c/Users/$(whoami.exe | cut -d "\\" -f 2)/.gcloud ~/.gcloud
 ```
 
 ## iftop conf
