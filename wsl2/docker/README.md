@@ -39,7 +39,11 @@ sudo usermod -aG docker $USER
 
 ### k3s setup
 ```bash
-curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" sh -s -
+curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="664" sh -s -
+```
+
+```bash
+sudo chown root:${USER} /etc/rancher/k3s/k3s.yaml
 ```
 
 ```bash
