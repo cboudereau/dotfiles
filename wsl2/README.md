@@ -1,5 +1,12 @@
 # setup
 
+## distro
+```powershell
+wsl --unregister ubuntu
+wsl --update
+wsl --install ubuntu
+```
+
 ## tmux conf
 ```bash
 sudo apt update -y && sudo apt install -y tmux acpi graphviz cmatrix ffmpeg iftop
