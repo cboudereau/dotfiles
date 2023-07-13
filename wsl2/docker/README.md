@@ -42,6 +42,10 @@ sudo usermod -aG docker $USER
 curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" sh -s -
 ```
 
+```bash
+sudo snap install --classic kubectx
+```
+
 ## rancher desktop
 
 ### dockerd
