@@ -1,0 +1,13 @@
+# .env loading in the shell
+function dotenv () {
+  local envfile=$(pwd)/.env
+
+  if test -f "${envfile}"; then
+    echo "loading ${envfile}"
+    set -a
+    source $envfile
+    set +a
+  else 
+    echo "${envfile} not found"
+  fi
+}
