@@ -9,7 +9,7 @@ wsl --install ubuntu
 
 ## tmux conf
 ```bash
-sudo apt update -y && sudo apt install -y tmux acpi graphviz cmatrix ffmpeg iftop
+sudo apt update -y && sudo apt install -y tmux acpi graphviz cmatrix ffmpeg iftop btop
 ln -s .tmux/tmux.conf.symlink ~/.tmux.conf
 ```
 

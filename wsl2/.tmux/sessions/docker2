@@ -1,0 +1,7 @@
+rename-session docker
+send-keys C-z '/usr/bin/btop' Enter
+split-window -v
+split-window -h -t 0 /usr/bin/docker stats
+resizep -x 80 -y 24 -t 0
+select-pane -t 2
+display "Welcome on board clem!"
