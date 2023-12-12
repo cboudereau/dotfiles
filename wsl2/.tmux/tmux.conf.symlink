@@ -1,6 +1,7 @@
 # sessions
 bind s source-file ~/.tmux/sessions/clem
-bind t source-file ~/.tmux/sessions/docker2
+bind t source-file ~/.tmux/sessions/docker
+bind u source-file ~/.tmux/sessions/docker2
 
 # reload config file
 bind r source-file ~/.tmux.conf \; display "Config Reloaded!"
