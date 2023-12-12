@@ -32,10 +32,21 @@ k3s test is on going, only the setup has been validated at the time of writing
 - setup docker for ubuntu : https://docs.docker.com/engine/install/ubuntu/
 - check that systemd is correctly installed : https://learn.microsoft.com/en-us/windows/wsl/wsl-config#systemd-support
 - to run docker and docker compose from any windows shell, add .scripts to PATH
-
-```bash
-sudo usermod -aG docker $USER
-```
+- add current user to docker group
+  ```bash
+  sudo usermod -aG docker $USER
+  ```
+- adjust the bridge and ip used by docker
+  ```bash
+  sudo tee /etc/docker/daemon.json > /dev/null << EOF
+  {
+    "bip": "10.0.1.1/24",
+    "default-address-pools": [
+      { "base": "10.0.2.0/18", "size": 24 }
+    ]
+  }
+  EOF
+  ```
 
 ### k3s setup
 ```bash

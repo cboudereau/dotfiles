@@ -27,4 +27,4 @@ sudo setcap "cap_net_admin,cap_net_raw=ep" /usr/sbin/iftop
 git and ssh comes from windows and linked through bash_aliases
 
 ## docker
-https://github.com/cboudereau/dotfiles/tree/master/wsl2/docker#native
+[docker native](./docker/README.md#native)
