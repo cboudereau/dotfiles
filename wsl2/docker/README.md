@@ -69,7 +69,7 @@ nerdctl is used with containerd as container runtime
 nerdctl run --rm -it ubuntu bash
 ```
 
-:warning: Internet is not available from the container (TODO : analyse why ?)
+⚠ Internet is not available from the container (TODO : analyse why ?)
 
 ## benchmark
 
