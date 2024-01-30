@@ -5,5 +5,5 @@ split-window -h -t 0 /usr/bin/docker stats
 split-window -v
 split-window -v
 resizep -x 80 -y 24 -t 0
-select-pane -t 2
+select-pane -t 4
 display "Welcome on board clem!"
