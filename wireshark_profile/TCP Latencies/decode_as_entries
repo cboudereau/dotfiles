@@ -1,0 +1,7 @@
+# "Decode As" entries file for Wireshark 4.2.5.
+#
+# This file is regenerated each time "Decode As" preferences
+# are saved within Wireshark. Making manual changes should be safe,
+# however.
+decode_as_entry: tcp.port,2197,(none),TDS
+decode_as_entry: tcp.port,5000,GSM over IP,TDS
