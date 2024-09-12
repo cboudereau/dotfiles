@@ -31,7 +31,7 @@ k3s test is on going, only the setup has been validated at the time of writing
 - add wsl2 Ubuntu distro
 - setup docker for ubuntu : https://docs.docker.com/engine/install/ubuntu/
 - check that systemd is correctly installed : https://learn.microsoft.com/en-us/windows/wsl/wsl-config#systemd-support
-- to run docker and docker compose from any windows shell, add .scripts to PATH
+- to run docker and docker compose from any windows shell, add .scripts to PATH and copy powershell profile
 - add current user to docker group
   ```bash
   sudo usermod -aG docker $USER

@@ -28,3 +28,9 @@ git and ssh comes from windows and linked through bash_aliases
 
 ## docker
 [docker native](./docker/README.md#native)
+
+## PowerShell integration
+Aliases and dotenv [PowerShell profile](./Microsoft.PowerShell_profile.ps1) should be installed on windows :
+
+- Windows PowerShell: Documents\WindowsPowerShell
+- PowerShell core: Documents\PowerShell\
