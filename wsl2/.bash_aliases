@@ -1,6 +1,7 @@
 . .dotenv
-alias git='/mnt/c/Users/cboudereau/bin/Git/bin/git.exe'
-alias g='/mnt/c/Users/cboudereau/bin/Git/bin/git.exe'
+WINDOWS_HOME=/mnt/c/Users/$(whoami.exe | cut -d "\\" -f 2 | tr -d '\r')
+alias git="${WINDOWS_HOME}/bin/Git/bin/git.exe"
+alias g="${WINDOWS_HOME}/bin/Git/bin/git.exe"
 alias ssh='/mnt/c/Windows/System32/OpenSSH/ssh.exe'
 alias d='docker'
 alias dc='docker compose'
