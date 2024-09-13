@@ -1,5 +1,5 @@
-. .dotenv
-WINDOWS_HOME=$(wslpath -au "$(cmd.exe /c 'echo %UserProfile%' 2> /dev/null)")
+. ~/.dotenv
+WINDOWS_HOME=$(wslpath -au "$(cmd.exe /c "<nul set /p=%UserProfile%" 2>/dev/null)")
 alias git="${WINDOWS_HOME}/bin/Git/bin/git.exe"
 alias g="${WINDOWS_HOME}/bin/Git/bin/git.exe"
 alias ssh='/mnt/c/Windows/System32/OpenSSH/ssh.exe'
