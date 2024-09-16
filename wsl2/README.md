@@ -15,7 +15,7 @@ ln -s .tmux/tmux.conf.symlink ~/.tmux.conf
 
 ## other app home folders
 ```bash
-WINDOWS_HOME=$(wslpath -au "$(cmd.exe /c "<nul set /p=%UserProfile%" 2>/dev/null)") && ln -s $WINDOWS_HOME/.aws ~/.aws && ln -s $WINDOWS_HOME/.azure ~/.azure && ln -s $WINDOWS_HOME/.config/gcloud ~/.config/gcloud
+WINDOWS_HOME=$(wslpath -au "$(cmd.exe /c "<nul set /p=%UserProfile%" 2>/dev/null)") && ln -s $WINDOWS_HOME/.aws ~/.aws && ln -s $WINDOWS_HOME/.azure ~/.azure && mkdir -p .config && ln -s $WINDOWS_HOME/.config/gcloud ~/.config/gcloud
 ```
 
 ## iftop conf
