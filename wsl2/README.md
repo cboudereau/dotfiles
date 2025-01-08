@@ -41,3 +41,8 @@ Aliases and dotenv [PowerShell profile](./Microsoft.PowerShell_profile.ps1) shou
 
 - Windows PowerShell: Documents\WindowsPowerShell
 - PowerShell core: Documents\PowerShell\
+
+## Windows Terminal Setup
+1. Copy [background](./WindowsTerminal/background.jpg) to home folder
+1. Windows Terminal > Settings > Open JSON File
+1. Copy [settings.json](./WindowsTerminal/settings.json) content to the current opened config
