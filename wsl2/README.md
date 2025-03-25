@@ -17,7 +17,7 @@ pushd ~ && . .bash_aliases && popd
 ## tmux conf
 ```bash
 sudo apt update -y && sudo apt install -y tmux acpi graphviz cmatrix ffmpeg iftop btop
-ln -s .tmux/tmux.conf.symlink ~/.tmux.conf
+ln -s ~/.tmux/tmux.conf.symlink ~/.tmux.conf
 ```
 
 ## other app home folders
