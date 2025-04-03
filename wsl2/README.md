@@ -16,7 +16,7 @@ pushd ~ && . .bash_aliases && popd
 
 ## tmux conf
 ```bash
-sudo apt update -y && sudo apt install -y tmux acpi graphviz cmatrix ffmpeg iftop btop
+sudo apt update -y && sudo apt install -y tmux acpi graphviz cmatrix ffmpeg iftop btop jq tcpdump
 ln -s ~/.tmux/tmux.conf.symlink ~/.tmux.conf
 ```
 
