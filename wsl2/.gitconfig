@@ -5,7 +5,7 @@
 [alias]
     ci = commit
     pg = clean -fxd
-    psh = "git push -u origin HEAD"
+    psh = push -u origin HEAD
     co = checkout
     st = status
     br = branch
