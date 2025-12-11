@@ -3,6 +3,7 @@ WINDOWS_HOME=$(wslpath -au "$(cmd.exe /c "<nul set /p=%UserProfile%" 2>/dev/null
 alias git="${WINDOWS_HOME}/bin/Git/bin/git.exe"
 alias g="${WINDOWS_HOME}/bin/Git/bin/git.exe"
 alias ssh='/mnt/c/Windows/System32/OpenSSH/ssh.exe'
+alias pwsh='/mnt/c/Program\ Files/PowerShell/7/pwsh.exe'
 alias d='docker'
 alias dc='docker compose'
 alias dcd='docker compose down --remove-orphans -v --rmi local'
