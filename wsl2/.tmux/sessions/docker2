@@ -4,6 +4,6 @@ split-window -v -c "#{pane_current_path}"
 split-window -h -c "#{pane_current_path}" -t 0 /usr/bin/docker stats
 resizep -x 80 -y 24 -t 0
 split-window -v -c "#{pane_current_path}" '/mnt/c/Program\ Files/PowerShell/7/pwsh.exe'
-split-window -v -c "#{pane_current_path}" cmatrix
+split-window -v -c "#{pane_current_path}"
 select-pane -t 4
 display "Welcome on board clem!"
