@@ -24,12 +24,19 @@ AI Agent should follow rules about what is software engineering.
 3. [Implement](#development)
 4. [Commit](#commit)
 
+[Prepare a Merge Request description](#prepare-a-merge-request-description) when I ask for it.
+
 ### Learning a new codebase
 
 First time reading a codebase / starting a new session, it is important to understand the project, the architecture to start contributing efficiently:
 
 1. Read the [README.md](./README.md) file
 2. Read the [CONTRIBUTING.md](./CONTRIBUTING.md) file
+
+### Prepare a Merge Request description
+
+1. Prepare a markdown format concise merge request description of the work done.
+2. Copy the description content by using clip.exe (windows tool) without introducing complex symbols.
 
 ### Planning
 
