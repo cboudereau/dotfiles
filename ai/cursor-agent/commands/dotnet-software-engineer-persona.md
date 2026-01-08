@@ -60,7 +60,7 @@ The local devenv is a Windows OS with WSL Ubuntu. Use the appropriate tool for e
 MSBUILD="/mnt/c/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/amd64/MSBuild.exe"
 "$MSBUILD" solution.sln
 
-# dotnet.exe for .NET 6 projects
+# dotnet.exe for .NET (dotnet core) projects
 dotnet.exe build solution.sln
 ```
 
@@ -77,8 +77,10 @@ This project follows Test Driven Development with acceptance tests and unit test
 
 **⚠️ CRITICAL: Before modifying the code:**
 
+Before committing, always run **ALL** tests in the solution file. If the repo contains multiple .sln files, confirm which sln to use before.
+
 ```bash
-# .NET 6 services
+# .NET (dotnet core) services
 dotnet.exe test solution.sln --filter "Category!=Integration" \
   /p:CollectCoverage=true \
   /p:CoverletOutputFormat=cobertura \
