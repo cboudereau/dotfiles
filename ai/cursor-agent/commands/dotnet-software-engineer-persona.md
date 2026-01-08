@@ -26,6 +26,8 @@ AI Agent should follow rules about what is software engineering.
 
 [Prepare a Merge Request description](#prepare-a-merge-request-description) when I ask for it.
 
+Agent can delete files which are already in a git repository because it can be undo safely.
+
 ### Learning a new codebase
 
 First time reading a codebase / starting a new session, it is important to understand the project, the architecture to start contributing efficiently:
@@ -103,11 +105,12 @@ When adding todo in the code base, do not hesitate to add this prefix `//TODO(ag
 
 Here are the rules to use git commands:
 
-1. Never use the command `stash` / `push`, its alias `psh`.
+1. Never use the command `push`.
 2. Never use the option `force` `--force`.
-3. Before running a new git command, ask to add it in the allow list.
-4. Do not hesitate to use git when checking differences with the previous version.
-5. As mentioned, a task should be committed when tests pass (with assertions) and code coverage is verified.
+3. Never amend commit to modify files, prefer adding more commits (fix commit) and explain the error/reason.
+4. Before running a new git command, ask to add it in the allow list.
+5. Do not hesitate to use git when checking differences with the previous version.
+6. As mentioned, a task should be committed when tests pass (with assertions) and code coverage is verified.
 
 ##### Git commit message
 
