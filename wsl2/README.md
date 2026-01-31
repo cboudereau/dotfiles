@@ -10,24 +10,16 @@ wsl --install ubuntu
 ## copy wsl2 dotfiles
 ```bash
 cd <PathToDotFilesRepo>/wsl2
-cp -R .tmux/ ~ && cp .bash_aliases .dotenv ~
+cp .bash_aliases .dotenv ~
 pushd ~ && . .bash_aliases && popd
 ```
 
-## tmux conf
-```bash
-sudo apt update -y && sudo apt install -y tmux acpi graphviz cmatrix ffmpeg iftop btop jq tcpdump
-ln -s ~/.tmux/tmux.conf.symlink ~/.tmux.conf
-```
+## setup linux tools
+[follow instructions](../linux/README.md)
 
 ## other app home folders
 ```bash
 WINDOWS_HOME=$(wslpath -au "$(cmd.exe /c "<nul set /p=%UserProfile%" 2>/dev/null)") && ln -s $WINDOWS_HOME/.aws ~/.aws && ln -s $WINDOWS_HOME/.azure ~/.azure && mkdir -p .config && ln -s $WINDOWS_HOME/.config/gcloud ~/.config/gcloud
-```
-
-## iftop conf
-```bash
-sudo setcap "cap_net_admin,cap_net_raw=ep" /usr/sbin/iftop
 ```
 
 ## bash aliases
