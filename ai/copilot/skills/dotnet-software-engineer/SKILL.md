@@ -39,9 +39,14 @@ When starting a new session:
 
 Environment: Windows OS with WSL Ubuntu
 
-Refer to [dotnet tools documentation](../../tools/dotnet/README.md) to identify the correct tool for each project type:
-- For .NET Framework projects, source the [msbuild utilities](../../tools/dotnet/fw/msbuild.sh) and use `msbuildfw` to build.
-- For .NET / .NET Core projects, use `dotnet.exe build solution.sln`.
+```bash
+# MSBuild for .NET Framework 4.8 projects
+MSBUILD="/mnt/c/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/amd64/MSBuild.exe"
+"$MSBUILD" solution.sln
+
+# dotnet.exe for .NET (dotnet core) projects
+dotnet.exe build solution.sln
+```
 
 ### Test
 
@@ -50,10 +55,8 @@ Refer to [dotnet tools documentation](../../tools/dotnet/README.md) to identify 
 3. Implement the feature. Always double check if the function already exists before implementing
 4. Run ALL tests in the solution before committing
 
-- For .NET Framework projects, source the [msbuild utilities](../../tools/dotnet/fw/msbuild.sh) and use `vstestfw` to run tests.
-- For .NET / .NET Core projects:
-
 ```bash
+# .NET (dotnet core) services
 dotnet.exe test solution.sln --filter "Category!=Integration" \
   /p:CollectCoverage=true \
   /p:CoverletOutputFormat=cobertura \
