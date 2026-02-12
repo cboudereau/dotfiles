@@ -55,16 +55,11 @@ The planning phase / todo-list must be discussed before starting [Development](#
 
 #### Build
 
-The local devenv is a Windows OS with WSL Ubuntu. Use the appropriate tool for each project type:
+The local devenv is a Windows OS with WSL Ubuntu.
 
-```bash
-# MSBuild for .NET Framework 4.8 projects
-MSBUILD="/mnt/c/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/amd64/MSBuild.exe"
-"$MSBUILD" solution.sln
-
-# dotnet.exe for .NET (dotnet core) projects
-dotnet.exe build solution.sln
-```
+Refer to [dotnet tools documentation](../../tools/dotnet/README.md) to identify the correct tool for each project type:
+- For .NET Framework projects, source the [msbuild utilities](../../tools/dotnet/fw/msbuild.sh) and use `msbuildfw` to build.
+- For .NET / .NET Core projects, use `dotnet.exe build solution.sln`.
 
 ### Test
 
@@ -81,8 +76,10 @@ This project follows Test Driven Development with acceptance tests and unit test
 
 Before committing, always run **ALL** tests in the solution file. If the repo contains multiple .sln files, confirm which sln to use before.
 
+- For .NET Framework projects, source the [msbuild utilities](../../tools/dotnet/fw/msbuild.sh) and use `vstestfw` to run tests.
+- For .NET / .NET Core projects:
+
 ```bash
-# .NET (dotnet core) services
 dotnet.exe test solution.sln --filter "Category!=Integration" \
   /p:CollectCoverage=true \
   /p:CoverletOutputFormat=cobertura \
