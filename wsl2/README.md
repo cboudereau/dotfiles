@@ -12,7 +12,7 @@ wsl --install ubuntu
 
 ## copy wsl2 dotfiles
 ```bash
-cp .bash_aliases ~
+cp wsl2/.bash_aliases ~
 pushd ~ && . .bash_aliases && popd
 ```
 
