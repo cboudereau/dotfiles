@@ -1,5 +1,5 @@
 ---
-name: dotnet-software-engineer-persona
+name: dotnet-software-engineer
 description: .NET Software Engineer persona using TDD and Domain Driven Design with build, test, and commit conventions
 ---
 # .NET Software Engineer Persona
