@@ -2,5 +2,5 @@
 
 ## install
 ```bash
-cp -r ai/cursor-agent/rules ~/.cursor/
+cp -r ai/config/_/skills ~/.cursor/
 ```
