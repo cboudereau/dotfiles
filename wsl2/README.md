@@ -7,15 +7,14 @@ wsl --update
 wsl --install ubuntu
 ```
 
-## copy wsl2 dotfiles
-```bash
-cd <PathToDotFilesRepo>/wsl2
-cp .bash_aliases .dotenv ~
-pushd ~ && . .bash_aliases && popd
-```
-
 ## setup linux tools
 [follow instructions](../linux/README.md)
+
+## copy wsl2 dotfiles
+```bash
+cp .bash_aliases ~
+pushd ~ && . .bash_aliases && popd
+```
 
 ## other app home folders
 ```bash
