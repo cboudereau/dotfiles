@@ -8,6 +8,9 @@ ln -s ~/.tmux/tmux.conf.symlink ~/.tmux.conf
 ```
 
 ## btop conf
+```bash
+mkdir -p ~/.config && cp -r .config/btop ~/.config
+```
 ### gpu
 #### amdgpu
 to display amdgpu stats, install the required package:
