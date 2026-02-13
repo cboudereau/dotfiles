@@ -25,7 +25,6 @@ This persona combines the following skills:
 5. [Test Code Coverage](../test-code-coverage/SKILL.md) - verify code coverage
 6. [Git Conventions](../git-conventions/SKILL.md) - git command rules and commit messages
 7. [Merge Request](../merge-request/SKILL.md) - prepare merge request descriptions
-8. [Evidence Based Analysis](../evidence-based-analysis/SKILL.md) - prevent hallucinations
 
 ## Workflow
 
