@@ -1,6 +1,6 @@
 ---
 name: test-code-coverage
-description: verify code coverage for test after activity
+description: "Verify and improve code coverage using Cobertura reports. Use when the user asks about code coverage, uncovered code, coverage reports, or when checking if new or modified code is properly tested. Also use after writing tests to verify coverage targets are met."
 ---
 # Verify code coverage for test after
 ## Overview

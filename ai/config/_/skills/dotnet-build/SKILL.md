@@ -1,6 +1,6 @@
 ---
 name: dotnet-build
-description: .NET build and test
+description: "Build and test .NET projects using dotnet CLI or MSBuild. Use when the user asks to build, compile, run tests, or debug a .NET, C#, F#, .NET Core, or .NET Framework project, or when working with .sln, .csproj, or .fsproj files."
 ---
 # Build and test .NET
 ## Overview

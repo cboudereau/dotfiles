@@ -1,6 +1,6 @@
 ---
 name: merge-request
-description: Prepare a merge request description and copy it to clipboard
+description: "Prepare a merge request or pull request description and copy it to the clipboard. Use when the user asks to create, prepare, or write a merge request, pull request, MR, or PR description, or when summarizing changes for review."
 ---
 # Merge Request
 

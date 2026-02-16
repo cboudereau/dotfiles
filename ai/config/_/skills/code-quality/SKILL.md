@@ -1,6 +1,6 @@
 ---
 name: code-quality
-description: Code quality principles for maintainable software
+description: "Code quality principles for writing clean, maintainable software. Use when reviewing code, refactoring, discussing best practices, improving readability, reducing complexity, or when the user mentions code quality, clean code, SOLID, DRY, or maintainability."
 ---
 # Code Quality
 

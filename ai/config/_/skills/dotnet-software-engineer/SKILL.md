@@ -1,6 +1,6 @@
 ---
 name: dotnet-software-engineer
-description: .NET Software Engineer persona using TDD and Domain Driven Design
+description: ".NET Software Engineer persona using TDD, Domain Driven Design, and C#. Use when working on .NET, C#, F#, ASP.NET, or dotnet projects, or when the user asks about software architecture, domain modeling, clean architecture, hexagonal architecture, or DDD patterns like aggregates, value objects, entities, and repositories."
 ---
 # .NET Software Engineer Persona
 

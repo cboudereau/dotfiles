@@ -1,6 +1,6 @@
 ---
 name: collaboration
-description: Collaboration workflow for planning and onboarding on a codebase
+description: "Collaboration workflow for planning, onboarding, and understanding a codebase. Use when starting a new task, exploring an unfamiliar project, creating a plan or todo list, discussing requirements, or when the user asks to understand the architecture or get started on a feature."
 ---
 # Collaboration
 

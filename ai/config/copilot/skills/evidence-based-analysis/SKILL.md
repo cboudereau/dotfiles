@@ -1,7 +1,6 @@
 ---
 name: evidence-based-analysis
-description: Prevents hallucinations by requiring evidence for all claims
-alwaysApply: true
+description: "Prevents hallucinations by requiring evidence-based analysis for all claims about the codebase. Use when analyzing code, writing documentation, explaining behavior, reviewing changes, debugging, or making any claim about how the code works. Always cite file and line numbers."
 ---
 
 # Overview

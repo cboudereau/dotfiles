@@ -1,6 +1,6 @@
 ---
 name: git-conventions
-description: Git command rules, commit message conventions, and safe usage patterns
+description: "Git command rules, commit message conventions, and safe usage patterns. Use when the user asks to commit, create a branch, check differences, write a commit message, or perform any git operation. Also use when discussing version control workflows or git safety."
 ---
 # Git Conventions
 

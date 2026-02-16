@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Test Driven Development methodology with acceptance and unit tests
+description: "Test Driven Development methodology with acceptance tests and unit tests. Use when the user asks to write tests, add test coverage, implement a feature using TDD, create a failing test first, or when discussing red-green-refactor, test-first development, or test strategy."
 ---
 # Test Driven Development
 
