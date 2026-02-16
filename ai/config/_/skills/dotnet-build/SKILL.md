@@ -3,10 +3,20 @@ name: dotnet-build
 description: "Build and test .NET projects using dotnet CLI or MSBuild. Use when the user asks to build, compile, run tests, or debug a .NET, C#, F#, .NET Core, or .NET Framework project, or when working with .sln, .csproj, or .fsproj files."
 ---
 # Build and test .NET
-## Overview
 
-1. Analyse project type (.NET Framework / .NET Core)
-2. Use the appropriate tool
+## When to use
+- User asks to "build", "compile", or "rebuild" a `.sln` or `.csproj` project
+- User asks to run .NET tests or unit tests
+- User mentions "msbuild", "dotnet build", "dotnet test", or "nuget restore"
+- User references a `.sln`, `.csproj`, or `.fsproj` file
+- User mentions "CI" in context of a .NET solution
+
+## Decision logic
+1. Find the `.sln` file the user wants to build
+2. Read the `.sln` file to determine the project type:
+   - If project GUIDs use `{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}` (classic C#) and Visual Studio format without SDK-style projects → use **.NET Framework** workflow
+   - If projects use SDK-style format (`<Project Sdk="Microsoft.NET.Sdk">`) or target `netcoreapp`/`net5+`/`net6+`/`net7+`/`net8+` → use **.NET Core** workflow
+3. Use the appropriate build and test commands below
 
 ## .NET Framework
 ### setup

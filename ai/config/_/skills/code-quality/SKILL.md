@@ -4,6 +4,13 @@ description: "Code quality principles for writing clean, maintainable software. 
 ---
 # Code Quality
 
+## When to use
+- User asks to review, refactor, or improve existing code
+- User asks about best practices, readability, or reducing complexity
+- User mentions "clean code", "SOLID", "DRY", "maintainability", or "code quality"
+- User asks to extract functions, reduce duplication, or improve consistency
+- User asks why code fails silently or uses suspicious default values
+
 ## Overview
 
 Principles to maintain high code quality across any codebase.

@@ -4,6 +4,13 @@ description: "Collaboration workflow for planning, onboarding, and understanding
 ---
 # Collaboration
 
+## When to use
+- User starts a new task or feature and needs to plan before implementing
+- User asks to explore, understand, or onboard onto an unfamiliar codebase
+- User asks to create a plan, todo list, or discuss requirements
+- User asks about the project architecture or how to get started
+- User opens a new session on a project for the first time
+
 ## Overview
 
 Software engineering is collaborative. These rules ensure alignment before implementation.

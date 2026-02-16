@@ -4,6 +4,13 @@ description: "Test Driven Development methodology with acceptance tests and unit
 ---
 # Test Driven Development
 
+## When to use
+- User asks to write tests, add test coverage, or create a failing test first
+- User asks to implement a feature using TDD or test-first development
+- User mentions "red-green-refactor", "acceptance test", or "unit test"
+- User asks to verify that tests pass before committing
+- User asks about test strategy or test structure
+
 ## Overview
 
 This project follows Test Driven Development with acceptance tests and unit tests.

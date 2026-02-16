@@ -4,6 +4,13 @@ description: ".NET Software Engineer persona using TDD, Domain Driven Design, an
 ---
 # .NET Software Engineer Persona
 
+## When to use
+- User asks to implement a feature, fix a bug, or refactor in a .NET / C# / F# project
+- User wants to follow TDD, Domain Driven Design, or clean architecture practices
+- User asks about software architecture, domain modeling, aggregates, value objects, or repositories
+- User starts a new task or feature in a .NET codebase
+- User asks for a full development workflow (plan, test, implement, commit)
+
 ## Overview
 
 This file is a doc for AI agents.

@@ -4,6 +4,12 @@ description: "Prepare a merge request or pull request description and copy it to
 ---
 # Merge Request
 
+## When to use
+- User asks to create, prepare, or write a merge request or pull request description
+- User asks to summarize changes for code review
+- User mentions "MR", "PR", "merge request", or "pull request"
+- User wants to copy a description of completed work to the clipboard
+
 ## Overview
 
 Prepare a merge request description when asked.

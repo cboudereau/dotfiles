@@ -4,6 +4,13 @@ description: "Git command rules, commit message conventions, and safe usage patt
 ---
 # Git Conventions
 
+## When to use
+- User asks to commit, stage, diff, or perform any git operation
+- User asks to create a branch or write a commit message
+- User asks to check differences with a previous version
+- User mentions "git", "commit", "branch", "diff", or "version control"
+- User is ready to commit after completing a task
+
 ## Overview
 
 Rules for safe and consistent git usage.
