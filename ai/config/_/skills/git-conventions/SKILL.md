@@ -34,7 +34,3 @@ A git commit message must start with:
 - `chore(agt):` to cleanup the codebase, removing dead code
 - `doc(agt):` when touching to .md files or documentation
 - `test(agt):` when touching test only
-
-## TODO markers
-
-When adding todo in the code base, use the prefix `//TODO(agt)`.

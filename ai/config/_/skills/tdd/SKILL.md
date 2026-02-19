@@ -21,6 +21,7 @@ This project follows Test Driven Development with acceptance tests and unit test
 2. Create a failing acceptance test if it does not exist. Add unit tests to test small cases or technical parts.
 3. Implement the feature. Always double check before implementing if the function does not exist.
 4. Run tests and get feedback
+5. Refactor
 
 ## Run tests and get feedback
 
