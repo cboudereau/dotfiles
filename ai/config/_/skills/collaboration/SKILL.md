@@ -19,8 +19,8 @@ Software engineering is collaborative. These rules ensure alignment before imple
 
 First time reading a codebase / starting a new session, it is important to understand the project and the architecture to start contributing efficiently:
 
-1. Read the [README.md](./README.md) file
-2. Read the [CONTRIBUTING.md](./CONTRIBUTING.md) file
+1. Read the project README.md file
+2. Read the project CONTRIBUTING.md file
 
 ## Planning
 
