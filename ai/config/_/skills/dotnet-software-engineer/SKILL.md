@@ -23,15 +23,10 @@ AI Agent should carefully read this file before jumping to the codebase.
 
 ## Skills
 
-This persona combines the following skills:
+This persona extends the [Software Engineer](../software-engineer/SKILL.md) base persona with .NET-specific tooling:
 
-1. [Collaboration](../collaboration/SKILL.md) - planning, onboarding
-2. [TDD](../tdd/SKILL.md) - test driven development methodology
-3. [Code Quality](../code-quality/SKILL.md) - code quality principles
-4. [.NET Build](../dotnet-build/SKILL.md) - build and test .NET projects
-5. [Test Code Coverage](../test-code-coverage/SKILL.md) - verify code coverage
-6. [Git Conventions](../git-conventions/SKILL.md) - git command rules and commit messages
-7. [Merge Request](../merge-request/SKILL.md) - prepare merge request descriptions
+1. [Software Engineer](../software-engineer/SKILL.md) - core skills (collaboration, TDD, code quality, test coverage, git conventions, merge request)
+2. [.NET Build](../dotnet-build/SKILL.md) - build and test .NET projects
 
 ## Workflow
 
