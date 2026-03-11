@@ -18,10 +18,11 @@ This project follows Test Driven Development with acceptance tests and unit test
 ## Rules
 
 1. Preserve file encoding
-2. Create a failing acceptance test if it does not exist. Add unit tests to test small cases or technical parts.
-3. Implement the feature. Always double check before implementing if the function does not exist.
-4. Run tests and get feedback
-5. Refactor
+2. Analyze test setup (which test framework is actually used ?, how to build (see relevant skill) ?, how to run test (see relevant skill) ?, how to analyze code coverage (see relevant skill) ?)
+3. Create a failing acceptance test if it does not exist. Add unit tests to test small cases or technical parts.
+4. Implement the feature. Always double check before implementing if the function does not exist.
+5. Run tests and get feedback
+6. Refactor
 
 ## Run tests and get feedback
 
