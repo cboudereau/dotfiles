@@ -20,6 +20,7 @@ This skill is always active. It applies to all analysis, documentation, and expl
 3. **Distinguish facts from inferences** - If you must infer, explicitly say "I infer..." or "This appears to..." and explain why
 4. **Verify references** - When you see something defined (function, script, variable), verify it's actually used before claiming it's part of the workflow
 5. **Trace the full path** - For CI/CD pipelines, trace job → script → reference chain completely
+6. **Verify before documenting** - When updating documentation or source-of-truth files based on a claim about command output, test results, or runtime behavior, run the command yourself to confirm before writing it as fact. Never take stated results at face value when you can verify them directly
 
 ## Verification Checklist
 
@@ -42,6 +43,7 @@ Before documenting any behavior:
 - "The pipeline automatically creates tags" (without showing which job does it)
 - "This script is used for..." (without showing where it's called)
 - "The system does X" (without citing evidence)
+- "All tests pass" (without running the tests yourself to confirm)
 
 ## When Uncertain
 
