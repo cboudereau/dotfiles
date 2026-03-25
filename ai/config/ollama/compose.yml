@@ -1,0 +1,17 @@
+services:
+  ollama:
+    build:
+      context: ./ollama
+    ports:
+      - 11434:11434
+    volumes:
+      - ./ollama_data/:/root/.ollama/
+    networks:
+      bridge:
+    # entrypoint: /bin/bash
+    # stdin_open: true # docker run -i
+    # tty: true        # docker run -t
+    # gpus: all
+
+networks:
+  bridge:
