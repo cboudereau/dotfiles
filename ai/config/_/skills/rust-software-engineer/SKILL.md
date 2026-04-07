@@ -35,6 +35,8 @@ Agent should follow the given approach:
 1. Plan (see collaboration skill)
 2. Test (see tdd skill)
 3. Implement (see code-quality and rust-build skills)
+   - **After each file edit**, run `cargo check -p <crate>` before editing another file (see rust-build fast feedback loop)
+   - Only run `cargo test` after `cargo check` passes
 4. Commit (see git-conventions skill)
 
 Agent can delete files which are already in a git repository because it can be undo safely.

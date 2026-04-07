@@ -20,6 +20,28 @@ description: "Build, test, and check Rust projects using cargo and related tooli
 4. Check for `rust-toolchain.toml` to determine the expected Rust toolchain version
 5. Use the appropriate build, test, and check commands below
 
+## Fast feedback loop
+
+Always run `cargo check` before `cargo build` or `cargo test`. It is much
+faster because it skips code generation — it only type-checks and resolves
+imports. This catches most errors (type mismatches, missing imports, wrong
+signatures) in seconds instead of minutes.
+
+```bash
+# After editing code — first verify it compiles (fast, seconds)
+cargo check -p <crate>
+
+# Only after check passes — run tests (slow, minutes)
+cargo test -p <crate> --lib
+```
+
+**Rules:**
+- After every file edit, run `cargo check -p <crate>` before editing the next file.
+- Never run `cargo test` or `cargo build` on code that hasn't passed `cargo check` first.
+- For workspace-wide checks: `cargo check --workspace` (still faster than build).
+- Use `-p <crate>` to scope to the crate you changed — avoids recompiling the world.
+- If `cargo check` fails, fix the error immediately before moving on.
+
 ## Build
 
 ```bash
