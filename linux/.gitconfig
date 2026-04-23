@@ -13,6 +13,7 @@
     reb = pull --rebase
     ds = diff --staged
     d = diff
+    wt = worktree
 [pull]
 	rebase = true
 [init]
