@@ -40,6 +40,35 @@ Strict order — each document depends on the previous:
 2. **adrs/*.md** — emerge during design (one per hard-to-reverse decision)
 3. **TASKS.md** — derived from DESIGN.md (one task per FR/NFR, with acceptance criteria)
 
+## Constitution
+
+The **constitution** is the set of rules the agent cannot break unilaterally during implementation. It is built across Phases 2–4 and enforced during Phase 5.
+
+The constitution is composed of:
+- **Requirements** (FR/NFR) — what the system must do and under what constraints
+- **ADR decisions** — hard-to-reverse choices that are settled and not open for re-evaluation
+- **Domain model** — the planned types, their attributes, and relationships
+- **Requirement traceability** — which types address which FR/NFR
+- **Transformation invariants** — the rules each function must enforce (input → output, with the invariant that must hold)
+- **External dependencies** — the crates/packages/services the project uses, no new ones without approval
+
+**Within the constitution** (agent acts autonomously, no need to stop):
+- Add fields or attributes to types when needed to satisfy an invariant
+- Rename types or fields for clarity, as long as the traceability table intent is preserved
+- Split a type into smaller types (e.g., extract a value object) when it makes the model cleaner
+- Add helper functions or intermediate transformations
+- Adjust signatures when a constraint requires it
+- Choose how to organize code (files, modules, visibility)
+
+**Outside the constitution** (agent must stop and surface to the user):
+- Change an ADR decision (e.g., switch from REST to gRPC, change a persistence strategy)
+- Add, remove, or alter a requirement (FR/NFR)
+- Violate a documented invariant or transformation rule
+- Skip an acceptance criterion that cannot be met
+- Introduce a new external dependency not listed in analysis
+
+If the constitution is well-built, the agent never stops. If it's incomplete, the agent will hit an outside-constitution gap and must halt. The quality of the constitution determines the quality of the autopilot.
+
 ## Rules
 
 ### Phase 1 — New need
@@ -130,9 +159,68 @@ What becomes easier or harder.
 
 ADR status lifecycle: `draft` -> `accepted` -> `superseded-by <ref>`
 
-### Phase 4 — Write TASKS.md
+### Phase 4 — Write TASKS.md (autopilot-ready)
 
-Each task is derived from a FR or NFR. Each task has a goal and acceptance criteria (XP acceptance tests: written before implementation, pass/fail, define "done").
+Phase 4 is the highest-effort phase. Its goal: build a constitution strong enough that the agent never hits an outside-constitution gap during implementation. The agent will adapt within the constitution — that is expected and normal.
+
+Phase 4 has three sub-phases that must be completed in order.
+
+#### Phase 4a — Analysis
+
+Before writing any task, explore the codebase to ground the plan in reality. Record findings in a `## Analysis` section at the top of TASKS.md:
+
+- **Build & test commands**: exact commands to build, test, lint, format (copy from CI config or Makefile)
+- **Domain model**: diagram of types/structs with their attributes (members), relationships, and requirement traceability — this is the source of truth the agent implements against (see template below)
+- **Interfaces / traits / contracts**: the behavioral contracts new code must satisfy — trait signatures, API schemas, protocol specs
+- **Transformations**: functions that convert between types — input type → output type, with the rule or invariant each transformation enforces
+- **Dependencies**: external crates/packages/services the tasks will interact with, their versions and API surfaces
+- **Constraints discovered**: anything the design did not anticipate (framework quirks, existing tech debt in the area)
+
+**Domain model diagram** (Mermaid class diagram — types, attributes, relationships, FR/NFR tracing):
+
+```mermaid
+classDiagram
+    class Order {
+        +OrderId id
+        +CustomerId customer
+        +List~LineItem~ items
+        +Money total()
+    }
+    class LineItem {
+        +ProductId product
+        +Quantity qty
+        +Money unit_price
+    }
+    Order "1" *-- "*" LineItem
+
+    class OrderRepository {
+        <<trait>>
+        +save(Order) Result
+        +find_by_id(OrderId) Option~Order~
+    }
+
+    class CreateOrder {
+        <<fn>>
+        +CreateOrderCmd → Result~Order, DomainError~
+    }
+```
+
+**Requirement traceability per type**:
+
+| Type / Trait / Fn | Addresses | Notes |
+|---|---|---|
+| `Order` | [FR1](./DESIGN.md#fr1) | Aggregate root |
+| `LineItem` | [FR1](./DESIGN.md#fr1) | Value object, immutable |
+| `OrderRepository` | [NFR1](./DESIGN.md#nfr1) | Trait — infra implements |
+| `CreateOrder` | [FR2](./DESIGN.md#fr2) | Validates invariants before persisting |
+
+This table is the contract between design and implementation. Every *planned domain type* must appear here. The agent may introduce additional implementation types (helpers, value objects extracted during refactoring) as long as they serve a type already in the table — but every type that addresses a FR/NFR must be traced here.
+
+If analysis reveals design gaps, go back to Phase 2/3 and update DESIGN.md and ADRs before writing tasks. Do not proceed with known unknowns.
+
+#### Phase 4b — Task specification
+
+Each task is derived from a FR or NFR. Each task must be **self-contained**: an agent reading only that task (plus linked references) has everything it needs to execute.
 
 Task references are clickable links to DESIGN.md anchors and relevant ADRs:
 
@@ -141,19 +229,69 @@ Task references are clickable links to DESIGN.md anchors and relevant ADRs:
 
 Design: [DESIGN.md](./DESIGN.md)
 
+## Analysis
+
+Build: `<exact build command>` — verified green
+Test: `<exact test command>` — verified green
+Lint: `<exact lint command>` — verified green
+
+### Known-failing tests
+| Test | Reason | Action |
+|---|---|---|
+| (none — or list pre-existing failures) | | ignore / skip |
+
+### Domain model
+(Mermaid class diagram — types, attributes, relationships)
+
+### Requirement traceability
+| Type / Trait / Fn | Addresses | Notes |
+|---|---|---|
+| `Order` | [FR1](./DESIGN.md#fr1) | Aggregate root |
+| `OrderRepository` | [NFR1](./DESIGN.md#nfr1) | Trait — infra implements |
+| `CreateOrder` | [FR2](./DESIGN.md#fr2) | Validates invariants before persisting |
+
+### Transformations
+| Function | Input → Output | Invariant / Rule |
+|---|---|---|
+| `CreateOrder` | `CreateOrderCmd → Result<Order, DomainError>` | At least one line item, total > 0 |
+| `Order::total` | `&self → Money` | Sum of (qty × unit_price) per line item |
+
 ## Tasks
 
 ### 1. Task title ([FR1](./DESIGN.md#fr1), [NFR2](./DESIGN.md#nfr2))
 **Goal**: Why this task exists (one sentence).
-**Uncertainty**: `uphill` | `downhill`
+**Types**: `Order`, `LineItem` — see domain model
+**Constraints**: rules the implementation must respect
+- [ADR: decision-name](./adrs/decision-name.md) — the constraint from this decision
+- Invariant: `Order` must always have at least one `LineItem`
+- Transformation: `CreateOrderCmd → Result<Order, DomainError>` must enforce total > 0
+**Verify**: `cargo test -- test_bar && cargo clippy`
 **Acceptance criteria**:
-- [ ] Criterion 1
+- [ ] Criterion 1 (pass/fail, no subjective language)
 - [ ] Criterion 2
-**Decisions**: [Relevant ADR](./adrs/decision-name.md)
+**Depends on**: (none) | task 2
+**Time-box**: ~45 min
 
-## Quality gates
+## Sessions
+
+Group tasks into autonomous sessions. Each session is a contiguous block of work (target: 2–4H) that ends with a verifiable checkpoint. An agent completes one session, verifies, then proceeds to the next. Minimize the number of sessions — fewer, longer sessions mean fewer interruptions.
+
+### Session 1 — <theme> (~2.5H)
+Tasks: 1, 2, 3, 4, 5
+**Skills**: `software-engineer` (+ language-specific extension for the project)
+**Checkpoint**: `<exact command that proves session is complete>`
+**Commit point**: yes — commit after checkpoint passes
+
+### Session 2 — <theme> (~2H)
+Tasks: 6, 7, 8
+**Skills**: `software-engineer`
+**Checkpoint**: `<exact command>`
+**Commit point**: yes
+
+## Quality gates (post-session review)
 - [ ] Acceptance criteria: all green above
 - [ ] Code review: implementation matches [DESIGN.md](./DESIGN.md) intent
+- [ ] Code organization: file placement, module structure, naming conventions (refactoring pass)
 - [ ] Code quality: no new complexity, clean types, no duplication
 - [ ] Security review: OWASP check, dependency audit, no secrets exposed
 - [ ] Observability: relevant metrics identified, dashboards/alerts in place, logging covers key paths
@@ -163,26 +301,88 @@ Design: [DESIGN.md](./DESIGN.md)
 **Uncertainty tracking** (inspired by Shape Up's hill chart):
 - `uphill` = figuring it out — the problem or approach is not yet understood. May trigger new ADRs or design changes.
 - `downhill` = making it happen — the approach is clear, only execution remains.
-- A task stuck `uphill` is a signal: either the task needs splitting, a rabbit hole was hit (update DESIGN.md), or a decision needs an ADR.
-- Update uncertainty as work progresses. All tasks must be `downhill` before quality gates.
+- A task stuck `uphill` is a signal: the task is not ready for autopilot. Go back to Phase 4a — either the analysis is incomplete or the task needs splitting.
+- **All tasks must be `downhill` before exiting Phase 4.** No `uphill` task may enter implementation.
 
 Task granularity: each task should be independently completable and testable (INVEST: Independent, Negotiable, Valuable, Estimable, Small, Testable). Prefer vertical slicing — cut through all layers for a thin but complete feature.
 
-### Phase 5 — Implement
+**Task specification checklist** — every task must have:
+- [ ] Types it creates or modifies (referencing the domain model)
+- [ ] Constraints extracted from ADRs, invariants, and transformation rules — the agent's guardrails
+- [ ] A verify command (copy-pasteable, exits 0 on success)
+- [ ] Acceptance criteria that are pass/fail with no subjective language
+- [ ] A time-box (if a task exceeds 90 min, split it)
+- [ ] Dependencies on other tasks declared explicitly
+- [ ] Every planned domain type in the task appears in the requirement traceability table
 
-Work through TASKS.md. Check acceptance criteria after each task.
+#### Phase 4c — Pre-flight gate
 
-**Discovery feedback loop**: implementation reveals things that design could not anticipate. When this happens:
+Before moving to Phase 5, the entire TASKS.md must pass this gate. This is a mandatory review — do not skip it.
 
-1. **New decision needed** — create a new ADR in the workspace (`adrs/`), link it from DESIGN.md and the relevant task
-2. **Requirement change** — update FR/NFR in DESIGN.md, adjust affected tasks and acceptance criteria in TASKS.md
-3. **New requirement discovered** — add it to DESIGN.md with a new anchor, derive a new task in TASKS.md
-4. **Design assumption invalidated** — update DESIGN.md, supersede affected ADRs with new ones
-5. **New trade-off identified** — record as ADR even if the choice seems obvious now (it won't be obvious in 6 months)
-6. **New knowledge about the codebase or situation** — update DESIGN.md Context section with what was learned (existing behavior, hidden constraints, undocumented dependencies, data shape, performance characteristics). This knowledge informs current and future decisions.
-7. **Rabbit hole encountered** — update DESIGN.md Rabbit holes section, cap the exploration with a constraint, split or simplify the affected task
+**Pre-flight checklist**:
 
-The workspace is a living draft space. Documents are never frozen during implementation — they reflect current understanding at all times.
+Constitution completeness:
+- [ ] Every task is `downhill` — no uncertainty remains
+- [ ] Domain model is complete — every planned domain type is in the diagram and traceability table
+- [ ] Every type in the traceability table maps to at least one FR or NFR
+- [ ] Transformations table covers every function that enforces a domain rule — input/output types and invariants are explicit
+- [ ] Every task's constraints are verifiable — the agent can check whether its changes respect them without human judgment
+- [ ] No constraint is ambiguous enough that two reasonable agents would interpret it differently
+
+Autopilot readiness:
+- [ ] Build, test, and lint commands pass (green baseline) — run them now and confirm
+- [ ] Known-failing tests are explicitly listed with their reason (pre-existing failures the agent must ignore, not fix)
+- [ ] Every session has a `Skills` field listing the skills the agent must load (e.g., `rust-software-engineer`, `tdd`, `code-quality`) — verify each skill name exists
+- [ ] Session checkpoints are defined and ordered
+- [ ] Total estimated time fits within the target session window (2–4H)
+- [ ] The constitution provides enough guardrails that the agent can make all implementation decisions autonomously — no decision requires knowledge outside the domain model, ADRs, transformations, and codebase
+
+If any item fails, fix it before proceeding. The pre-flight gate is the last human checkpoint before autopilot.
+
+### Phase 5 — Implement (autopilot)
+
+Work through TASKS.md session by session.
+
+**Session startup**: before working on any task in a session, load every skill listed in the session's `Skills` field using the Skill tool. These skills provide the coding standards, build commands, and methodology the agent must follow for that session.
+
+For each task:
+1. Read the task specification (goal, types, constraints)
+2. Implement to satisfy the goal and acceptance criteria, following the loaded skills
+3. Run the verify command
+4. Check off acceptance criteria
+5. At session end, run the session checkpoint and commit if it passes
+
+**Autonomy model**: tasks define goals and constraints, not step-by-step scripts — the agent decides *how* to achieve them. The constitution (defined above) is the boundary. See the constitution section for what the agent can and cannot do autonomously.
+
+**How the agent validates its own changes**: before moving to the next task, the agent checks:
+1. Does the change respect every constraint listed on the task?
+2. Does every type still map to its FR/NFR in the traceability table?
+3. Do the transformation invariants still hold?
+4. Does the verify command pass?
+
+If all four pass, the change is within the constitution — continue. If any fails, classify the gap below.
+
+**Discovery — exception handling**:
+
+Discovery during implementation means the planning phase missed something. If Phase 4 was done thoroughly, discovery should be rare.
+
+**Severity levels**:
+
+1. **Within constitution** (agent continues) — the agent needs to adjust types, add fields, or rework an approach, but the change respects all ADRs, invariants, and requirements. This is normal autonomous adaptation, not discovery. Continue without stopping.
+
+2. **Ambiguous** (agent pauses at session boundary) — the agent is unsure whether a change respects the constitution. Complete the current task if possible, document the ambiguity in the task, and surface it at the next session checkpoint for review before continuing.
+
+3. **Outside constitution** (agent stops immediately) — an ADR decision is wrong, a requirement is missing or contradictory, an invariant cannot be satisfied, or a new external dependency is needed. The agent must:
+   - Stop execution
+   - Document what was discovered and why it is outside the constitution
+   - Surface to the user for a decision
+   - Do NOT continue with remaining tasks — they may depend on the same assumption
+
+**When an outside-constitution gap triggers, go back to the relevant phase**:
+- ADR decision wrong → Phase 3 (new or superseded ADR), then re-run Phase 4c pre-flight
+- Requirement change → Phase 2 (update DESIGN.md), then Phase 4b-4c
+- Design assumption invalidated → Phase 2-3 (update design + ADRs), then Phase 4a-4c
+- Rabbit hole encountered → update DESIGN.md Rabbit holes section, split or simplify the affected task, re-run Phase 4c
 
 ### Phase 6 — Quality gates
 

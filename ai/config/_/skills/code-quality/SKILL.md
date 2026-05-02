@@ -24,3 +24,6 @@ Principles to maintain high code quality across any codebase.
 ## Comments
 
 When adding todo in the code base, use the prefix `//TODO(agt)`.
+
+## When adding comments ?
+Comments are usefull to easy track trade-offs or to mark a part for a plan or indicate a temporary situtation.
