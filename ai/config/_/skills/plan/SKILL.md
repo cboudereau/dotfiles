@@ -11,9 +11,24 @@ description: "Planning skill for complex, multi-session work. Use when the user 
 - User asks to integrate workspace artifacts into durable storage
 - User asks to review or amend an existing design or workspace
 
-## Overview
+## Goal
 
-Structured planning workflow using a workspace for drafting and type-scoped durable storage for validated knowledge. Tool-agnostic, markdown-only.
+Planning must always take less time than implementation. The effort scales with complexity, never the other way around.
+
+**Who does what**:
+- The **agent** does the heavy lifting: explores the codebase, drafts DESIGN.md, builds the domain model, writes tasks, runs pre-flight
+- The **human** reviews, makes decisions (ADRs), and says "go"
+
+**Human time budget** (for a 2–4H implementation session):
+- Phase 2 — DESIGN.md: ~10 min — review requirements, confirm scope
+- Phase 3 — ADRs: ~10 min — make the hard decisions the agent cannot
+- Phase 4b — Tasks: ~10 min — review task goals and constraints
+- Phase 4c — Pre-flight: ~5 min — final approval before autopilot
+- **Total: ~30–40 min of human attention buys 2–4H of uninterrupted autopilot**
+
+Everything else (exploring the codebase, drafting documents, building the domain model, writing tasks, running pre-flight checks) is agent work.
+
+**Why this pays off**: without planning, the agent stops mid-autopilot on an outside-constitution gap. The human must context-switch, understand the problem, make a decision, and restart the agent. One interruption costs more than the entire planning phase — and it often cascades into more interruptions.
 
 ## Structure
 
@@ -167,16 +182,42 @@ Phase 4 has three sub-phases that must be completed in order.
 
 #### Phase 4a — Analysis
 
-Before writing any task, explore the codebase to ground the plan in reality. Record findings in a `## Analysis` section at the top of TASKS.md:
+Before writing any task, explore the codebase to ground the plan in reality. Record findings in the `## Analysis` section of TASKS.md (see template below for format):
 
-- **Build & test commands**: exact commands to build, test, lint, format (copy from CI config or Makefile)
-- **Domain model**: diagram of types/structs with their attributes (members), relationships, and requirement traceability — this is the source of truth the agent implements against (see template below)
-- **Interfaces / traits / contracts**: the behavioral contracts new code must satisfy — trait signatures, API schemas, protocol specs
-- **Transformations**: functions that convert between types — input type → output type, with the rule or invariant each transformation enforces
-- **Dependencies**: external crates/packages/services the tasks will interact with, their versions and API surfaces
-- **Constraints discovered**: anything the design did not anticipate (framework quirks, existing tech debt in the area)
+- **Build & test commands**: exact commands to build, test, lint, format
+- **Domain model**: types/structs with attributes, relationships, and requirement traceability
+- **Interfaces / traits / contracts**: behavioral contracts new code must satisfy
+- **Transformations**: functions that convert between types — input → output, with invariants
+- **Dependencies**: external crates/packages/services, their versions and API surfaces
+- **Constraints discovered**: anything the design did not anticipate
 
-**Domain model diagram** (Mermaid class diagram — types, attributes, relationships, FR/NFR tracing):
+Every *planned domain type* must appear in the requirement traceability table. The agent may introduce additional implementation types as long as they serve a traced type.
+
+If analysis reveals design gaps, go back to Phase 2/3 and update DESIGN.md and ADRs before writing tasks.
+
+#### Phase 4b — Task specification
+
+Each task is derived from a FR or NFR. Each task must be **self-contained**: an agent reading only that task (plus linked references) has everything it needs to execute.
+
+Task references are clickable links to DESIGN.md anchors and relevant ADRs:
+
+```markdown
+# <NAME> — Tasks
+
+Design: [DESIGN.md](./DESIGN.md)
+
+## Analysis
+
+Build: `<exact build command>` — verified green
+Test: `<exact test command>` — verified green
+Lint: `<exact lint command>` — verified green
+
+### Known-failing tests
+| Test | Reason | Action |
+|---|---|---|
+| (none — or list pre-existing failures) | | ignore / skip |
+
+### Domain model
 
 ```mermaid
 classDiagram
@@ -205,48 +246,11 @@ classDiagram
     }
 ```
 
-**Requirement traceability per type**:
-
-| Type / Trait / Fn | Addresses | Notes |
-|---|---|---|
-| `Order` | [FR1](./DESIGN.md#fr1) | Aggregate root |
-| `LineItem` | [FR1](./DESIGN.md#fr1) | Value object, immutable |
-| `OrderRepository` | [NFR1](./DESIGN.md#nfr1) | Trait — infra implements |
-| `CreateOrder` | [FR2](./DESIGN.md#fr2) | Validates invariants before persisting |
-
-This table is the contract between design and implementation. Every *planned domain type* must appear here. The agent may introduce additional implementation types (helpers, value objects extracted during refactoring) as long as they serve a type already in the table — but every type that addresses a FR/NFR must be traced here.
-
-If analysis reveals design gaps, go back to Phase 2/3 and update DESIGN.md and ADRs before writing tasks. Do not proceed with known unknowns.
-
-#### Phase 4b — Task specification
-
-Each task is derived from a FR or NFR. Each task must be **self-contained**: an agent reading only that task (plus linked references) has everything it needs to execute.
-
-Task references are clickable links to DESIGN.md anchors and relevant ADRs:
-
-```markdown
-# <NAME> — Tasks
-
-Design: [DESIGN.md](./DESIGN.md)
-
-## Analysis
-
-Build: `<exact build command>` — verified green
-Test: `<exact test command>` — verified green
-Lint: `<exact lint command>` — verified green
-
-### Known-failing tests
-| Test | Reason | Action |
-|---|---|---|
-| (none — or list pre-existing failures) | | ignore / skip |
-
-### Domain model
-(Mermaid class diagram — types, attributes, relationships)
-
 ### Requirement traceability
 | Type / Trait / Fn | Addresses | Notes |
 |---|---|---|
 | `Order` | [FR1](./DESIGN.md#fr1) | Aggregate root |
+| `LineItem` | [FR1](./DESIGN.md#fr1) | Value object, immutable |
 | `OrderRepository` | [NFR1](./DESIGN.md#nfr1) | Trait — infra implements |
 | `CreateOrder` | [FR2](./DESIGN.md#fr2) | Validates invariants before persisting |
 
@@ -306,38 +310,34 @@ Tasks: 6, 7, 8
 
 Task granularity: each task should be independently completable and testable (INVEST: Independent, Negotiable, Valuable, Estimable, Small, Testable). Prefer vertical slicing — cut through all layers for a thin but complete feature.
 
-**Task specification checklist** — every task must have:
-- [ ] Types it creates or modifies (referencing the domain model)
-- [ ] Constraints extracted from ADRs, invariants, and transformation rules — the agent's guardrails
-- [ ] A verify command (copy-pasteable, exits 0 on success)
-- [ ] Acceptance criteria that are pass/fail with no subjective language
-- [ ] A time-box (if a task exceeds 90 min, split it)
-- [ ] Dependencies on other tasks declared explicitly
-- [ ] Every planned domain type in the task appears in the requirement traceability table
-
 #### Phase 4c — Pre-flight gate
 
-Before moving to Phase 5, the entire TASKS.md must pass this gate. This is a mandatory review — do not skip it.
+Before moving to Phase 5, the entire TASKS.md must pass this gate. This is the last human checkpoint before autopilot.
 
-**Pre-flight checklist**:
+**Per task**:
+- [ ] Types it creates or modifies reference the domain model
+- [ ] Constraints are extracted from ADRs, invariants, and transformation rules
+- [ ] Verify command is copy-pasteable and exits 0 on success
+- [ ] Acceptance criteria are pass/fail with no subjective language
+- [ ] Time-box is set (split if > 90 min)
+- [ ] Dependencies on other tasks are declared
+- [ ] Every planned domain type appears in the requirement traceability table
+- [ ] Task is `downhill` — no uncertainty remains
 
-Constitution completeness:
-- [ ] Every task is `downhill` — no uncertainty remains
-- [ ] Domain model is complete — every planned domain type is in the diagram and traceability table
+**Constitution completeness**:
+- [ ] Domain model covers every planned domain type in diagram and traceability table
 - [ ] Every type in the traceability table maps to at least one FR or NFR
-- [ ] Transformations table covers every function that enforces a domain rule — input/output types and invariants are explicit
-- [ ] Every task's constraints are verifiable — the agent can check whether its changes respect them without human judgment
+- [ ] Transformations table covers every function that enforces a domain rule
 - [ ] No constraint is ambiguous enough that two reasonable agents would interpret it differently
 
-Autopilot readiness:
+**Autopilot readiness**:
 - [ ] Build, test, and lint commands pass (green baseline) — run them now and confirm
-- [ ] Known-failing tests are explicitly listed with their reason (pre-existing failures the agent must ignore, not fix)
-- [ ] Every session has a `Skills` field listing the skills the agent must load (e.g., `rust-software-engineer`, `tdd`, `code-quality`) — verify each skill name exists
+- [ ] Known-failing tests are explicitly listed with their reason
+- [ ] Every session has a `Skills` field — verify each skill name exists
 - [ ] Session checkpoints are defined and ordered
 - [ ] Total estimated time fits within the target session window (2–4H)
-- [ ] The constitution provides enough guardrails that the agent can make all implementation decisions autonomously — no decision requires knowledge outside the domain model, ADRs, transformations, and codebase
 
-If any item fails, fix it before proceeding. The pre-flight gate is the last human checkpoint before autopilot.
+If any item fails, fix it before proceeding.
 
 ### Phase 5 — Implement (autopilot)
 
@@ -384,17 +384,7 @@ Discovery during implementation means the planning phase missed something. If Ph
 - Design assumption invalidated → Phase 2-3 (update design + ADRs), then Phase 4a-4c
 - Rabbit hole encountered → update DESIGN.md Rabbit holes section, split or simplify the affected task, re-run Phase 4c
 
-### Phase 6 — Quality gates
-
-Before integration, all quality gates must pass:
-1. All acceptance criteria are green
-2. Code review completed
-3. Code quality verified
-4. Security review passed
-5. Observability verified — relevant metrics identified, dashboards/alerts in place
-6. Performance verified — NFR targets met, no regressions on critical paths
-
-### Phase 7 — Integrate
+### Phase 6 — Integrate
 
 Move validated artifacts to durable storage:
 1. Move ADRs to `docs/adrs/` — assign numbers (next available `NNNN`), set status to `accepted`
@@ -403,30 +393,7 @@ Move validated artifacts to durable storage:
 
 ## Cross-referencing
 
-**Every identifier, acronym, or reference used in any document must be a clickable link to its definition.** This applies to:
-- Requirement identifiers (FR1, NFR1)
-- ADR references
-- Design doc references
-- Technology names when an ADR justifies the choice
-- External references (specs, standards, APIs)
-- Task references when mentioned from another document
-- Any acronym or term defined elsewhere in the workspace
-
-Traceability is only real if a reviewer can follow any reference without searching. If an identifier appears and is not a link, it is a defect.
-
-**How to link**:
-- Define anchors at the source: `<a id="identifier"></a>` or use markdown headings (auto-anchored)
-- Link at the usage site: `[FR1](./DESIGN.md#fr1)`, `[ECB provider](./adrs/ecb-exchange-rates.md)`
-- ADRs link back: `Addresses: [FR2](../DESIGN.md#fr2)`
-- External references: inline link `[ISO 4217](https://en.wikipedia.org/wiki/ISO_4217)`
-
-Link directions:
-```
-TASKS.md --> DESIGN.md --> ADRs
-                ^            |
-                +------------+
-              (Addresses: FRx, NFRx)
-```
+Every identifier or reference in any document must be a clickable link to its definition. If an identifier appears and is not a link, it is a defect. The templates above show the linking conventions — follow them consistently.
 
 ## Amending existing work
 
