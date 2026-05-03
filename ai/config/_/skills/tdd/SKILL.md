@@ -5,6 +5,7 @@ description: "Test Driven Development methodology with acceptance tests and unit
 # Test Driven Development
 
 ## When to use
+- **Any code change** — every fix, feature, or refactor must have a corresponding test
 - User asks to write tests, add test coverage, or create a failing test first
 - User asks to implement a feature using TDD or test-first development
 - User mentions "red-green-refactor", "acceptance test", or "unit test"

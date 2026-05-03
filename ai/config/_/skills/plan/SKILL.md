@@ -66,6 +66,7 @@ The constitution is composed of:
 - **Requirement traceability** — which types address which FR/NFR
 - **Transformation invariants** — the rules each function must enforce (input → output, with the invariant that must hold)
 - **External dependencies** — the crates/packages/services the project uses, no new ones without approval
+- **TDD rule** — every code change requires a corresponding test: failing test first, then implementation, then green (see [TDD skill](../tdd/SKILL.md)). No code is committed without a test that proves it works.
 
 **Within the constitution** (agent acts autonomously, no need to stop):
 - Add fields or attributes to types when needed to satisfy an invariant
@@ -84,14 +85,28 @@ The constitution is composed of:
 
 If the constitution is well-built, the agent never stops. If it's incomplete, the agent will hit an outside-constitution gap and must halt. The quality of the constitution determines the quality of the autopilot.
 
+## Session continuity
+
+Claude Code's built-in plan mode (`EnterPlanMode`) stores ephemeral plans in `~/.claude/plans/`. These are conversation-scoped and do not survive sessions. **Do not use built-in plan mode for this skill** — use `docs/workspace/` instead, which is project-scoped and committed to git.
+
+To allow Claude to discover active workspaces at conversation start, add an entry to the project's `CLAUDE.md`:
+
+```markdown
+## Active workspaces
+- [order-system](docs/workspace/order-system/TASKS.md) — Phase 5, Session 2
+```
+
+Update this entry as work progresses. Remove it when the workspace is integrated (Phase 6). This is how a new session picks up where the last one left off.
+
 ## Rules
 
 ### Phase 1 — New need
 
-Create the workspace:
+Create the workspace and register it in `CLAUDE.md`:
 ```bash
 mkdir -p docs/workspace/<NAME>/adrs
 ```
+Then add an entry to the project's `CLAUDE.md` under `## Active workspaces`.
 
 ### Phase 2 — Write DESIGN.md
 
@@ -390,6 +405,7 @@ Move validated artifacts to durable storage:
 1. Move ADRs to `docs/adrs/` — assign numbers (next available `NNNN`), set status to `accepted`
 2. Move DESIGN.md to `docs/designs/<NAME>.md`
 3. Delete `docs/workspace/<NAME>/` — TASKS.md dies with it, git history preserves it
+4. Remove the workspace entry from `CLAUDE.md` `## Active workspaces`
 
 ## Cross-referencing
 
