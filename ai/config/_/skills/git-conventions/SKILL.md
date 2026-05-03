@@ -15,6 +15,9 @@ description: "Git command rules, commit message conventions, and safe usage patt
 
 Rules for safe and consistent git usage.
 
+## Rules
+Before committing, the code must compile and tests must be successful without failing / ignored tests.
+
 ## Command rules
 
 1. Never use the command `push`.
@@ -28,9 +31,9 @@ Rules for safe and consistent git usage.
 
 A git commit message must start with:
 
-- `feat(agt):` for feature
-- `fix(agt):` when fixing the codebase
-- `refac(agt):` for refactoring, mostly to prepare or finish a feat
-- `chore(agt):` to cleanup the codebase, removing dead code
-- `doc(agt):` when touching to .md files or documentation
-- `test(agt):` when touching test only
+- `feat:` for feature
+- `fix:` when fixing the codebase
+- `refac:` for refactoring, mostly to prepare or finish a feat
+- `chore:` to cleanup the codebase, removing dead code
+- `doc:` when touching to .md files or documentation
+- `test:` when touching test only

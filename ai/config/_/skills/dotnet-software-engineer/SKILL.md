@@ -25,14 +25,14 @@ AI Agent should carefully read this file before jumping to the codebase.
 
 This persona extends the [Software Engineer](../software-engineer/SKILL.md) base persona with .NET-specific tooling:
 
-1. [Software Engineer](../software-engineer/SKILL.md) - core skills (collaboration, TDD, code quality, test coverage, git conventions, merge request)
+1. [Software Engineer](../software-engineer/SKILL.md) - core skills (plan, TDD, code quality, test coverage, git conventions, merge request)
 2. [.NET Build](../dotnet-build/SKILL.md) - build and test .NET projects
 
 ## Workflow
 
 Agent should follow the given approach:
 
-1. Plan (see collaboration skill)
+1. Plan (see plan skill)
 2. Test (see tdd skill)
 3. Implement (see code-quality and dotnet-build skills)
 4. Commit (see git-conventions skill)

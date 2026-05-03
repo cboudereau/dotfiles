@@ -25,18 +25,25 @@ AI Agent should carefully read this file before jumping to the codebase.
 
 This persona combines the following core skills:
 
-1. [Collaboration](../collaboration/SKILL.md) - planning, onboarding
+1. [Plan](../plan/SKILL.md) - planning, onboarding
 2. [TDD](../tdd/SKILL.md) - test driven development methodology
 3. [Code Quality](../code-quality/SKILL.md) - code quality principles
 4. [Test Code Coverage](../test-code-coverage/SKILL.md) - verify code coverage
 5. [Git Conventions](../git-conventions/SKILL.md) - git command rules and commit messages
 6. [Merge Request](../merge-request/SKILL.md) - prepare merge request descriptions
 
+## Language-specific extensions
+
+This is the base skill. When working on a specific language, also load the corresponding extension — it inherits everything above and adds language-specific patterns, idioms, and build tooling:
+
+- [Rust Software Engineer](../rust-software-engineer/SKILL.md) + [Rust Build](../rust-build/SKILL.md) — for Rust/Cargo projects
+- [.NET Software Engineer](../dotnet-software-engineer/SKILL.md) + [.NET Build](../dotnet-build/SKILL.md) — for C#/F#/.NET projects
+
 ## Workflow
 
 Agent should follow the given approach:
 
-1. Plan (see collaboration skill)
+1. Plan (see plan skill)
 2. Test (see tdd skill)
 3. Implement (see code-quality and build skill)
 4. Commit (see git-conventions skill)
