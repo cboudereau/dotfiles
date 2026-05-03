@@ -284,6 +284,9 @@ classDiagram
 - [ADR: decision-name](./adrs/decision-name.md) — the constraint from this decision
 - Invariant: `Order` must always have at least one `LineItem`
 - Transformation: `CreateOrderCmd → Result<Order, DomainError>` must enforce total > 0
+**Tests**: what to test before implementing (red → green)
+- `test_order_requires_at_least_one_line_item` — creating an Order with empty items returns error
+- `test_order_total_sums_line_items` — total equals sum of qty × unit_price
 **Verify**: `cargo test -- test_bar && cargo clippy`
 **Acceptance criteria**:
 - [ ] Criterion 1 (pass/fail, no subjective language)
@@ -332,6 +335,7 @@ Before moving to Phase 5, the entire TASKS.md must pass this gate. This is the l
 **Per task**:
 - [ ] Types it creates or modifies reference the domain model
 - [ ] Constraints are extracted from ADRs, invariants, and transformation rules
+- [ ] Tests are defined — named, with expected behavior described (these become the failing tests)
 - [ ] Verify command is copy-pasteable and exits 0 on success
 - [ ] Acceptance criteria are pass/fail with no subjective language
 - [ ] Time-box is set (split if > 90 min)
@@ -362,18 +366,21 @@ Work through TASKS.md session by session.
 
 For each task:
 1. Read the task specification (goal, types, constraints)
-2. Implement to satisfy the goal and acceptance criteria, following the loaded skills
-3. Run the verify command
-4. Check off acceptance criteria
-5. At session end, run the session checkpoint and commit if it passes
+2. Write a failing test that proves the acceptance criteria (red)
+3. Implement to make the test pass (green)
+4. Refactor if needed
+5. Run the verify command
+6. Check off acceptance criteria
+7. At session end, run the session checkpoint and commit if it passes
 
 **Autonomy model**: tasks define goals and constraints, not step-by-step scripts — the agent decides *how* to achieve them. The constitution (defined above) is the boundary. See the constitution section for what the agent can and cannot do autonomously.
 
 **How the agent validates its own changes**: before moving to the next task, the agent checks:
-1. Does the change respect every constraint listed on the task?
-2. Does every type still map to its FR/NFR in the traceability table?
-3. Do the transformation invariants still hold?
-4. Does the verify command pass?
+1. Does the change have a corresponding test that was red before the implementation?
+2. Does the change respect every constraint listed on the task?
+3. Does every type still map to its FR/NFR in the traceability table?
+4. Do the transformation invariants still hold?
+5. Does the verify command pass?
 
 If all four pass, the change is within the constitution — continue. If any fails, classify the gap below.
 
