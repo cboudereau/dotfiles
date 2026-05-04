@@ -44,7 +44,7 @@ docs/adrs/                           <- durable ADRs (numbered, cross-cutting)
   0001-short-title.md
 
 docs/designs/                        <- durable Design Docs
-  <NAME>.md
+  YYYYMMDD_<NAME>.md
 ```
 
 ## Document Order
@@ -417,7 +417,7 @@ Discovery during implementation means the planning phase missed something. If Ph
 
 Move validated artifacts to durable storage:
 1. Move ADRs to `docs/adrs/` — assign numbers (next available `NNNN`), set status to `accepted`
-2. Move DESIGN.md to `docs/designs/<NAME>.md`
+2. Move DESIGN.md to `docs/designs/YYYYMMDD_<NAME>.md` (date = integration day)
 3. Delete `docs/workspace/<NAME>/` — TASKS.md dies with it, git history preserves it
 4. Remove the workspace entry from `CLAUDE.md` `## Active workspaces`
 
@@ -429,6 +429,6 @@ Every identifier or reference in any document must be a clickable link to its de
 
 To amend or extend work that was already integrated:
 1. Create a new `docs/workspace/<NAME-v2>/`
-2. Reference the existing design: `Amends: [designs/<NAME>.md](../../designs/<NAME>.md)`
+2. Reference the existing design: `Amends: [designs/YYYYMMDD_<NAME>.md](../../designs/YYYYMMDD_<NAME>.md)`
 3. Follow the same workflow (DESIGN.md -> ADRs -> TASKS.md -> quality gates -> integrate)
 4. Superseded ADRs get status `superseded-by docs/adrs/NNNN-new-decision.md`
