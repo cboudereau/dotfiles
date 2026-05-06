@@ -21,6 +21,11 @@ pushd ~ && . .bash_aliases && popd
 WINDOWS_HOME=$(wslpath -au "$(cmd.exe /c "<nul set /p=%UserProfile%" 2>/dev/null)") && ln -s $WINDOWS_HOME/.aws ~/.aws && ln -s $WINDOWS_HOME/.azure ~/.azure && mkdir -p .config && ln -s $WINDOWS_HOME/.config/gcloud ~/.config/gcloud
 ```
 
+## tmux conf
+```bash
+cp -r wsl2/.tmux ~/
+```
+
 ## bash aliases
 git and ssh comes from windows and linked through bash_aliases
 
