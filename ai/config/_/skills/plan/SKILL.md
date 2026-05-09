@@ -365,6 +365,16 @@ Before moving to Phase 5, the entire TASKS.md must pass this gate. This is the l
 
 If any item fails, fix it before proceeding.
 
+**Plan commit**: once the pre-flight gate passes, commit all workspace artifacts (`docs/workspace/<NAME>/`) with message:
+
+```
+docs(<NAME>): plan ready for autopilot
+
+Phases 1–4 complete. DESIGN.md, ADRs, and TASKS.md pass pre-flight gate.
+```
+
+This checkpoint preserves the plan before implementation begins. The plan is the contract — it must be committed before any code changes.
+
 ### Phase 5 — Implement (autopilot)
 
 Work through TASKS.md session by session.
@@ -413,6 +423,8 @@ Discovery during implementation means the planning phase missed something. If Ph
 - Design assumption invalidated → Phase 2-3 (update design + ADRs), then Phase 4a-4c
 - Rabbit hole encountered → update DESIGN.md Rabbit holes section, split or simplify the affected task, re-run Phase 4c
 
+**After all sessions complete**: once every session checkpoint passes and all acceptance criteria are checked off, proceed immediately to Phase 6. Do not stop or wait for user input — integration is part of the autopilot.
+
 ### Phase 6 — Integrate
 
 Move validated artifacts to durable storage:
@@ -420,6 +432,15 @@ Move validated artifacts to durable storage:
 2. Move DESIGN.md to `docs/designs/YYYYMMDD_<NAME>.md` (date = integration day)
 3. Delete `docs/workspace/<NAME>/` — TASKS.md dies with it, git history preserves it
 4. Remove the workspace entry from `CLAUDE.md` `## Active workspaces`
+
+**Integration commit**: after all integration steps are complete, commit with message:
+
+```
+docs(<NAME>): integrate workspace into durable storage
+
+ADRs numbered and moved to docs/adrs/. Design moved to docs/designs/.
+Workspace deleted — git history preserves TASKS.md.
+```
 
 ## Cross-referencing
 
