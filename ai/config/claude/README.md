@@ -2,6 +2,9 @@
 
 Claude has the same issue as copilot since it does not check the input.
 
+References:
+ - [terminal config](https://code.claude.com/docs/en/terminal-config)
+
 ## install
 ```bash
 cp -r ai/config/_/skills ~/.claude/
