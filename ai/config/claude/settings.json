@@ -11,18 +11,5 @@
   "effortLevel": "high",
   "permissions": {
     "defaultMode": "auto"
-  },
-  "hooks": {
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "notify-send 'Claude Code' 'Claude Code needs your attention'"
-          }
-        ]
-      }
-    ]
   }
 }
