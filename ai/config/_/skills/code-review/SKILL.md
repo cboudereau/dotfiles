@@ -4,7 +4,7 @@ description: "Code review principles and checklist for reviewing any codebase re
 ---
 # Code Review
 
-> Based on "What to look for in a code review" by Trisha Gee (Java Champion, JetBrains).
+> Based on "What to look for in a code review" by Trisha Gee (Java Champion, JetBrains) and [personal notes](https://cboudereau.github.io/bookworm/2023-01-23_Code_Review/)
 
 ## When to use
 
