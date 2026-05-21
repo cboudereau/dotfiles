@@ -11,5 +11,9 @@
   "effortLevel": "high",
   "permissions": {
     "defaultMode": "auto"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
   }
 }

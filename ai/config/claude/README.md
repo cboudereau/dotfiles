@@ -9,5 +9,5 @@ References:
 ```bash
 cp -r ai/config/_/skills ~/.claude/
 cp -r ai/config/copilot/skills/evidence-based-analysis ~/.claude/skills/
-cp ai/config/claude/settings.json ~/.claude/
+cp ai/config/claude/settings.json ai/config/claude/statusline-command.sh ~/.claude/
 ```
