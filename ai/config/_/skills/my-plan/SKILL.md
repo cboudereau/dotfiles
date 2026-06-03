@@ -45,20 +45,20 @@ This skill is **explicitly orchestrated** — do not run every phase inline on t
 the root is `./docs`
 
 ```
-docs/workspace/<NAME>/          <- temporary draft space (one folder = full context)
+docs/workspace/<NAME>/          <- temporary focus space while planning + implementing
   adrs/                         <- draft ADRs (slug-named: <decision-slug>.md)
   DESIGN.md                     <- draft Design Doc
   TASKS.md                      <- Work Breakdown (lives and dies with workspace)
 
-docs/<theme>/                   <- durable storage, organized by feature/theme
-  README.md                     <- theme index: scope + links to its designs and ADRs
+docs/<NAME>/                    <- durable home for the feature (same <NAME>)
+  README.md                     <- what this feature is + links to its designs and ADRs
   adrs/
     YYYYMMDD_<slug>.md          <- durable ADR, date-prefixed, status accepted
   designs/
     YYYYMMDD_<name>.md          <- durable Design Doc
 ```
 
-Durable ADRs and designs share one naming scheme — `YYYYMMDD_<slug>.md` — and are distinguished by their subdirectory, not by a number. There is **no global ADR counter**: the date prefix orders them and the slug keeps each unique (matching the existing design-doc convention). Pick or create the theme at integration time (Phase 6), not before.
+A **workspace is both a feature and a temporary focus space**. `<NAME>` (the agent session name) identifies the work while drafting under `docs/workspace/<NAME>/`, and becomes the durable home `docs/<NAME>/` at integration. Scope the workspace at the level you want it to live — broad (e.g. `storage`, `performance`) to gather related decisions over time, narrow for a one-off. Durable ADRs and designs share one naming scheme — `YYYYMMDD_<slug>.md` — distinguished by subdirectory, not by a number. There is **no global ADR counter**: the date prefix orders them and the slug keeps each unique.
 
 ## Document Order
 
@@ -114,7 +114,7 @@ If no workspace is active, proceed to Phase 1.
 
 ### Phase 1 — New need
 
-Create the workspace and register it in the project's root `CLAUDE.md`. Name it `<NAME>` after the current agent session (fall back to a short slug of the work if the session is unnamed) — this keeps the draft folder traceable to the session that owns it. The durable theme is chosen later, at integration (Phase 6).
+Create the workspace and register it in the project's root `CLAUDE.md`. Name it `<NAME>` after the current agent session (fall back to a short slug of the work if the session is unnamed) — this keeps the draft folder traceable to the session that owns it. The same `<NAME>` becomes the durable home `docs/<NAME>/` at integration (Phase 6) — a workspace is both the feature and its temporary focus space.
 ```bash
 mkdir -p docs/workspace/<NAME>/adrs
 ```
@@ -331,13 +331,13 @@ classDiagram
 
 Group tasks into autonomous sessions. Each session is a contiguous block of work (target: 2–4H) that ends with a verifiable checkpoint. An agent completes one session, verifies, then proceeds to the next. Minimize the number of sessions — fewer, longer sessions mean fewer interruptions.
 
-### Session 1 — <theme> (~2.5H)
+### Session 1 — <title> (~2.5H)
 Tasks: 1, 2, 3, 4, 5
 **Skills**: `software-engineer` (+ language-specific extension for the project)
 **Checkpoint**: `<exact command that proves session is complete>`
 **Commit point**: yes — commit after checkpoint passes
 
-### Session 2 — <theme> (~2H)
+### Session 2 — <title> (~2H)
 Tasks: 6, 7, 8
 **Skills**: `software-engineer`
 **Checkpoint**: `<exact command>`
@@ -475,11 +475,11 @@ Discovery during implementation means the planning phase missed something. If Ph
 
 ### Phase 6 — Integrate
 
-Move validated artifacts into the durable **theme** folder (`docs/<theme>/`), organized by feature:
-1. Pick the theme this work belongs to. If none fits, create `docs/<theme>/` with a `README.md` index.
-2. Move ADRs to `docs/<theme>/adrs/` — rename each to `YYYYMMDD_<slug>.md` (date = integration day), set status to `accepted`. No numbering.
-3. Move DESIGN.md to `docs/<theme>/designs/YYYYMMDD_<NAME>.md` (date = integration day)
-4. Update `docs/<theme>/README.md` — add links to the new design and ADRs
+Promote the validated artifacts from the workspace to its durable home `docs/<NAME>/` (same `<NAME>`):
+1. Create `docs/<NAME>/` with a `README.md` index if it does not exist (an existing one means you are amending — append to it).
+2. Move ADRs to `docs/<NAME>/adrs/` — rename each to `YYYYMMDD_<slug>.md` (date = integration day), set status to `accepted`. No numbering.
+3. Move DESIGN.md to `docs/<NAME>/designs/YYYYMMDD_<NAME>.md` (date = integration day)
+4. Update `docs/<NAME>/README.md` — add links to the new design and ADRs
 5. Rewrite any cross-reference links so they resolve from the new locations (a superseded ADR references its replacement by path, not number)
 6. Delete `docs/workspace/<NAME>/` — TASKS.md dies with it, git history preserves it
 7. Remove the workspace entry from `CLAUDE.md` `## Active workspaces`
@@ -487,10 +487,10 @@ Move validated artifacts into the durable **theme** folder (`docs/<theme>/`), or
 **Integration commit**: after all integration steps are complete, commit with message:
 
 ```
-docs(<NAME>): integrate workspace into docs/<theme>
+docs(<NAME>): integrate workspace into docs/<NAME>
 
-ADRs and design moved to docs/<theme>/ (date-prefixed, status accepted).
-Theme README updated. Workspace deleted — git history preserves TASKS.md.
+ADRs and design moved to docs/<NAME>/ (date-prefixed, status accepted).
+README updated. Workspace deleted — git history preserves TASKS.md.
 ```
 
 ## Cross-referencing
@@ -501,6 +501,6 @@ Every identifier or reference in any document must be a clickable link to its de
 
 To amend or extend work that was already integrated:
 1. Create a new `docs/workspace/<NAME-v2>/`
-2. Reference the existing design by its theme path: `Amends: [<theme>/designs/YYYYMMDD_<NAME>.md](../../<theme>/designs/YYYYMMDD_<NAME>.md)`
+2. Reference the existing design by its path: `Amends: [<NAME>/designs/YYYYMMDD_<NAME>.md](../../<NAME>/designs/YYYYMMDD_<NAME>.md)`
 3. Follow the same workflow (DESIGN.md -> ADRs -> TASKS.md -> quality gates -> integrate)
-4. Superseded ADRs get status `superseded-by docs/<theme>/adrs/YYYYMMDD_<new-slug>.md`
+4. Superseded ADRs get status `superseded-by docs/<NAME>/adrs/YYYYMMDD_<new-slug>.md`
