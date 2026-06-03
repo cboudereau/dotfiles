@@ -98,21 +98,6 @@ The constitution is composed of:
 
 If the constitution is well-built, the agent never stops. If it's incomplete, the agent will hit an outside-constitution gap and must halt. The quality of the constitution determines the quality of the autopilot.
 
-## Session continuity
-
-Do **not** use Claude Code's built-in plan mode (`EnterPlanMode`) for this skill — its plans are conversation-scoped and do not survive. Use `docs/workspace/`, which is project-scoped and committed to git.
-
-Register each active workspace in the project's **root** `CLAUDE.md` so any later session can find and resume it. The pointer is self-describing — it carries both the state and how to act on it:
-
-```markdown
-## Active workspaces
-- [order-system](docs/workspace/order-system/TASKS.md) — Phase 5, task 4/7
-  RESUME: load the `my-plan` skill, then read TASKS.md (checked = done) + `git log --oneline`;
-  continue at first unchecked task; re-run the session checkpoint before trusting state.
-```
-
-Name only the `my-plan` skill here; per-session implementation skills live in TASKS.md. Update the pointer after every task; remove it at integration (Phase 6). Full steps: [Phase 0 — Resume](#phase-0--resume-run-on-every-start).
-
 ## Rules
 
 ### Phase 0 — Resume (run on every start)
@@ -129,11 +114,18 @@ If no workspace is active, proceed to Phase 1.
 
 ### Phase 1 — New need
 
-Create the workspace and register it in `CLAUDE.md`:
+Create the workspace and register it in the project's root `CLAUDE.md`:
 ```bash
 mkdir -p docs/workspace/<NAME>/adrs
 ```
-Then add an entry to the project's `CLAUDE.md` under `## Active workspaces`.
+Add a self-describing entry under `## Active workspaces` — this is the resume anchor (Phase 0 reads it; update it after every task; remove it at Phase 6). Name only the `my-plan` skill; per-session skills live in TASKS.md.
+
+```markdown
+## Active workspaces
+- [<NAME>](docs/workspace/<NAME>/TASKS.md) — Phase 5, task 4/7
+  RESUME: load the `my-plan` skill, then read TASKS.md (checked = done) + `git log --oneline`;
+  continue at first unchecked task; re-run the session checkpoint before trusting state.
+```
 
 ### Phase 2 — Write DESIGN.md
 
