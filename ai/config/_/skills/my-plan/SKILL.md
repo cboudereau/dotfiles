@@ -114,7 +114,7 @@ If no workspace is active, proceed to Phase 1.
 
 ### Phase 1 — New need
 
-Create the workspace and register it in the project's root `CLAUDE.md`:
+Create the workspace and register it in the project's root `CLAUDE.md`. Name it `<NAME>` after the current agent session (fall back to a short slug of the work if the session is unnamed) — this keeps the draft folder traceable to the session that owns it. The durable theme is chosen later, at integration (Phase 6).
 ```bash
 mkdir -p docs/workspace/<NAME>/adrs
 ```
