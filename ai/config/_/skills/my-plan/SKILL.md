@@ -1,6 +1,6 @@
 ---
-name: plan
-description: "Planning skill for complex, multi-session work. Use when the user enters plan mode, asks to plan a feature, design a system, create a workspace, write a design doc, or when the problem requires structured analysis before implementation."
+name: my-plan
+description: "Personal planning skill for complex, multi-session work with durable workspace artifacts and autopilot execution. Use when the user asks to plan a feature, design a system, create a workspace, write a design doc, resume an active workspace, or when a problem requires structured analysis before implementation. Distinct from Claude Code's built-in plan mode — this produces project-scoped, committed artifacts."
 ---
 # Plan
 
@@ -29,6 +29,16 @@ Planning must always take less time than implementation. The effort scales with 
 Everything else (exploring the codebase, drafting documents, building the domain model, writing tasks, running pre-flight checks) is agent work.
 
 **Why this pays off**: without planning, the agent stops mid-autopilot on an outside-constitution gap. The human must context-switch, understand the problem, make a decision, and restart the agent. One interruption costs more than the entire planning phase — and it often cascades into more interruptions.
+
+## Delegation model
+
+This skill is **explicitly orchestrated** — do not run every phase inline on the main thread. The main agent is the **orchestrator**: it stays responsive to the human, holds a small context, and delegates heavy work to subagents. Prescribe delegation; do not rely on it emerging.
+
+- **Phase 4a (Analysis)** — fan out read-only `Explore` subagents **in parallel**, one per axis (domain model, build/test/lint commands, interfaces/contracts, dependencies, existing patterns). Each burns its own context and returns structured findings; the orchestrator synthesizes the `## Analysis` section.
+- **Phases 2–3 (Design/ADRs)** — for a genuinely contested decision, spawn parallel agents arguing each viable option (judge panel), then synthesize the ADR. For simple decisions, draft inline.
+- **Phase 5 (Implementation)** — execute via the **deterministic Workflow loop** (one fresh-context subagent per task). The orchestrator launches it, monitors, re-runs checkpoints, and surfaces gaps — it does **not** implement inline.
+
+**Why this matters**: an orchestrator that does everything inline fills its own context, triggers compaction, and loses the thread. Delegation keeps the orchestrator thin (so it rarely compacts) and gives each unit of work a fresh context (so no single window carries the whole job). This is what restores the "listen to the human while monitoring ongoing work" behavior.
 
 ## Structure
 
@@ -76,7 +86,7 @@ The constitution is composed of:
 - Adjust signatures when a constraint requires it
 - Choose how to organize code (files, modules, visibility)
 
-**Outside the constitution** (agent must stop and surface to the user):
+**Outside the constitution** (agent stops *implementing*, then analyzes and proposes — see [Phase 5 severity 3](#phase-5--implement-autopilot)): the agent does not change these unilaterally, but it does the analysis itself and drafts a `proposed` ADR with a recommendation for the human to ratify — it hands the human a decision, not a raw problem:
 - Change an ADR decision (e.g., switch from REST to gRPC, change a persistence strategy)
 - Add, remove, or alter a requirement (FR/NFR)
 - Violate a documented invariant or transformation rule
@@ -89,16 +99,33 @@ If the constitution is well-built, the agent never stops. If it's incomplete, th
 
 Claude Code's built-in plan mode (`EnterPlanMode`) stores ephemeral plans in `~/.claude/plans/`. These are conversation-scoped and do not survive sessions. **Do not use built-in plan mode for this skill** — use `docs/workspace/` instead, which is project-scoped and committed to git.
 
-To allow Claude to discover active workspaces at conversation start, add an entry to the project's `CLAUDE.md`:
+To allow Claude to discover active workspaces — and to **resume after context compaction** — add a **self-describing** entry to the project's **root** `CLAUDE.md`. Root `CLAUDE.md` is re-read from disk and re-injected after compaction, `/clear`, and restart; nested `CLAUDE.md` is *not*, so the entry must live at the root.
 
 ```markdown
 ## Active workspaces
-- [order-system](docs/workspace/order-system/TASKS.md) — Phase 5, Session 2
+- [order-system](docs/workspace/order-system/TASKS.md) — Phase 5, task 4/7
+  RESUME: load the `my-plan` skill, then read TASKS.md (checked = done) + `git log --oneline`;
+  continue at first unchecked task; re-run the session checkpoint before trusting state.
+  Per-session implementation skills are listed in TASKS.md.
 ```
 
-Update this entry as work progresses. Remove it when the workspace is integrated (Phase 6). This is how a new session picks up where the last one left off.
+The entry is **self-describing on purpose**. `SKILL.md` is not auto-loaded, so after compaction the only thing guaranteed to survive is root `CLAUDE.md` — it must therefore carry both the state pointer *and* the instruction to act on it. It names only the **`my-plan`** skill: the bootstrap needed to resume the protocol. The per-session implementation skills (`software-engineer`, language extensions, …) live in TASKS.md and load at session startup — naming them here would only create drift.
+
+Update this entry **after every task** (advance `task N/M`), not just at session end — it is the durable resume anchor. Remove it when the workspace is integrated (Phase 6). See [Phase 0 — Resume](#phase-0--resume-run-on-every-start) for the full protocol.
 
 ## Rules
+
+### Phase 0 — Resume (run on every start)
+
+Before doing anything else — including after context compaction, `/clear`, or a new session — reconstruct state from disk. **Disk and git are the source of truth; never trust conversational memory for where work stands.**
+
+1. Read root `CLAUDE.md` `## Active workspaces` → find the active workspace and phase.
+2. If a workspace is active, load the `my-plan` skill (this file) and read its `TASKS.md`.
+3. In TASKS.md: checked acceptance criteria = done; the first unchecked task is the resume point.
+4. Run `git log --oneline` and the active session's checkpoint command → confirm what is actually committed and green.
+5. Resume at the first unchecked task. If the checkpoint disagrees with the checkboxes, trust the checkpoint and re-open the affected task.
+
+If no workspace is active, proceed to Phase 1.
 
 ### Phase 1 — New need
 
@@ -194,7 +221,12 @@ Which option and why.
 What becomes easier or harder.
 ```
 
-ADR status lifecycle: `draft` -> `accepted` -> `superseded-by <ref>`
+ADR status lifecycle: `draft` -> `proposed` -> `accepted` -> `superseded-by <ref>`
+
+- `draft` — the agent is still working the decision out.
+- `proposed` — the agent has finished analysis and has a recommendation, awaiting human ratification. **The agent may drive an ADR to `proposed` autonomously; only the human moves `proposed` -> `accepted`.**
+- `accepted` — ratified by the human; now part of the constitution.
+- `superseded-by <ref>` — replaced by a later decision.
 
 ### Phase 4 — Write TASKS.md (autopilot-ready)
 
@@ -204,7 +236,9 @@ Phase 4 has three sub-phases that must be completed in order.
 
 #### Phase 4a — Analysis
 
-Before writing any task, explore the codebase to ground the plan in reality. Record findings in the `## Analysis` section of TASKS.md (see template below for format):
+Before writing any task, explore the codebase to ground the plan in reality.
+
+**Delegate this — do not explore inline.** Fan out read-only `Explore` subagents **in parallel**, one per axis below. Each returns structured findings; the orchestrator synthesizes them into the `## Analysis` section of TASKS.md (see template below for format). Parallel exploration keeps the orchestrator's context small and shortens wall-clock time. Axes (one subagent each):
 
 - **Build & test commands**: exact commands to build, test, lint, format
 - **Domain model**: types/structs with attributes, relationships, and requirement traceability
@@ -377,18 +411,56 @@ This checkpoint preserves the plan before implementation begins. The plan is the
 
 ### Phase 5 — Implement (autopilot)
 
-Work through TASKS.md session by session.
+Work through TASKS.md session by session. **Execution is delegated and deterministic — the orchestrator does not implement inline.**
 
-**Session startup**: before working on any task in a session, load every skill listed in the session's `Skills` field using the Skill tool. These skills provide the coding standards, build commands, and methodology the agent must follow for that session.
+**Why a Workflow loop**: inline execution has two failure modes — (a) the orchestrator fills its context, compaction fires, and the in-flight thread is lost; (b) the model fails to advance sequential work on its own. A Workflow loop fixes both: each task runs as its own **fresh-context subagent** (no single window holds all of TASKS.md), and a deterministic `for` loop advances tasks regardless of model temperament. Implementation is human-pre-approved at the Phase 4c gate, so detaching from the conversation is *intended* — and it leaves the orchestrator free to monitor and to surface gaps. The orchestrator launches the Workflow, monitors progress, and on return **re-runs the session checkpoint itself** before trusting the result.
 
-For each task:
-1. Read the task specification (goal, types, constraints)
+**Session startup**: each task subagent loads every skill listed in its session's `Skills` field using the Skill tool. These provide the coding standards, build commands, and methodology for that session.
+
+**Per-task contract** (each task subagent):
+1. Read the task specification (goal, types, constraints) from TASKS.md
 2. Write a failing test that proves the acceptance criteria (red)
 3. Implement to make the test pass (green)
 4. Refactor if needed
 5. Run the verify command
-6. Check off acceptance criteria
-7. At session end, run the session checkpoint and commit if it passes
+6. Check off the acceptance criteria in TASKS.md — **only when green**
+7. Update the root `CLAUDE.md` `task N/M` pointer, then commit — **only on success**
+
+**Durability invariants** (these make execution compaction- and crash-proof):
+- **Check off a box only when its criterion is green; commit only on success.** A half-done task leaves no checkmark and no commit, so a re-run re-attempts it from clean state (idempotent).
+- **Advance the root `CLAUDE.md` `## Active workspaces` `task N/M` pointer after each task** — it is the durable resume anchor (see [Phase 0](#phase-0--resume-run-on-every-start)).
+- **The orchestrator re-runs the session checkpoint after the Workflow returns** — verifying real green state rather than trusting a subagent's "done" (a subagent can stop mid-task from its own compaction).
+
+**Execution Workflow skeleton** (deterministic loop, one fresh-context subagent per task; the user's "go" at pre-flight is the natural opt-in):
+
+```js
+export const meta = {
+  name: 'my-plan-autopilot',
+  description: 'Execute TASKS.md task-by-task with TDD and durable checkoff',
+  phases: [{ title: 'Execute' }],
+}
+// args = { workspace: 'docs/workspace/<NAME>', tasks: [...in dependency order] }
+const results = []
+for (const t of args.tasks) {
+  const r = await agent(
+    `Execute task ${t.id} from ${args.workspace}/TASKS.md. Load the session's Skills first.
+     TDD: failing test (red) -> implement (green) -> refactor -> run the verify command.
+     OUTSIDE-CONSTITUTION gap (ADR wrong / missing requirement / new dependency / unsatisfiable invariant)?
+       -> draft a 'proposed' ADR with options + recommendation in ${args.workspace}/adrs/,
+          do NOT implement the decision, return {status:'gap', adr, detail}.
+     Success -> check off acceptance criteria in TASKS.md, advance the CLAUDE.md pointer, commit,
+          return {status:'done', commit}.`,
+    { label: `task:${t.id}`, phase: 'Execute', schema: TASK_RESULT })
+  results.push({ task: t.id, ...r })
+  if (r.status === 'gap') {
+    // park this task's dependents; keep independent tasks moving; collect proposed ADRs
+    log(`Gap at task ${t.id} — drafted proposed ADR, continuing with independent tasks`)
+  }
+}
+return results
+```
+
+Resume after a stop is `Workflow({scriptPath, resumeFromRunId})` — completed task calls replay from cache instantly; the first incomplete/new task and everything after runs live. Durable checkoff means a plain re-run also works: done tasks are simply skipped.
 
 **Autonomy model**: tasks define goals and constraints, not step-by-step scripts — the agent decides *how* to achieve them. The constitution (defined above) is the boundary. See the constitution section for what the agent can and cannot do autonomously.
 
@@ -411,11 +483,14 @@ Discovery during implementation means the planning phase missed something. If Ph
 
 2. **Ambiguous** (agent pauses at session boundary) — the agent is unsure whether a change respects the constitution. Complete the current task if possible, document the ambiguity in the task, and surface it at the next session checkpoint for review before continuing.
 
-3. **Outside constitution** (agent stops immediately) — an ADR decision is wrong, a requirement is missing or contradictory, an invariant cannot be satisfied, or a new external dependency is needed. The agent must:
-   - Stop execution
-   - Document what was discovered and why it is outside the constitution
-   - Surface to the user for a decision
-   - Do NOT continue with remaining tasks — they may depend on the same assumption
+3. **Outside constitution** (agent analyzes, proposes, and keeps independent work moving) — an ADR decision is wrong, a requirement is missing or contradictory, an invariant cannot be satisfied, or a new external dependency is needed. The agent does **not** halt blankly and dump the raw problem on the human. It does the legwork autonomously and hands the human a *decision, not a problem*:
+   - **Analyze the option space.** For a genuinely contested decision, fan out a judge panel (parallel subagents, one arguing each viable option); for a simple one, analyze inline.
+   - **Write a `proposed` ADR** in `workspace/adrs/` using the standard ADR template — options table, consequences, and a clear **recommendation**.
+   - **Do NOT implement the decision.** ADRs are hard-to-reverse by definition; building dependent work on an unratified choice is the exact mistake ADRs exist to prevent.
+   - **Park the blocked task and its dependents** (from the `Depends on` field), then continue with independent tasks so the run stays productive.
+   - **Surface the batch of `proposed` ADRs at the session checkpoint** for ratification.
+
+   The human ratifies — or picks a different option — moving the ADR `proposed` -> `accepted`. Only then does the agent resume the parked tasks. This keeps the agent autonomous (it owns research, recommendation, and keeping other work moving) while preserving the human as the sole ratifier of hard-to-reverse choices.
 
 **When an outside-constitution gap triggers, go back to the relevant phase**:
 - ADR decision wrong → Phase 3 (new or superseded ADR), then re-run Phase 4c pre-flight

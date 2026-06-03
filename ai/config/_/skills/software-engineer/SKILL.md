@@ -25,7 +25,7 @@ AI Agent should carefully read this file before jumping to the codebase.
 
 This persona combines the following core skills:
 
-1. [Plan](../plan/SKILL.md) - planning, onboarding
+1. [Plan](../my-plan/SKILL.md) - planning, onboarding
 2. [TDD](../tdd/SKILL.md) - test driven development methodology
 3. [Code Quality](../code-quality/SKILL.md) - code quality principles
 4. [Test Code Coverage](../test-code-coverage/SKILL.md) - verify code coverage
@@ -43,7 +43,7 @@ This is the base skill. When working on a specific language, also load the corre
 
 Agent should follow the given approach:
 
-1. Plan (see plan skill)
+1. Plan (see my-plan skill)
 2. Test (see tdd skill)
 3. Implement (see code-quality and build skill)
 4. Commit (see git-conventions skill)

@@ -32,7 +32,7 @@ This persona extends the [Software Engineer](../software-engineer/SKILL.md) base
 
 Agent should follow the given approach:
 
-1. Plan (see plan skill)
+1. Plan (see my-plan skill)
 2. Test (see tdd skill)
 3. Implement (see code-quality and rust-build skills)
    - **After each file edit**, run `cargo check -p <crate>` before editing another file (see rust-build fast feedback loop)
