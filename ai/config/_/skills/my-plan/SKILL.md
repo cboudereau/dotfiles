@@ -36,7 +36,7 @@ This skill is **explicitly orchestrated** — do not run every phase inline on t
 
 - **Phase 4a (Analysis)** — fan out read-only `Explore` subagents **in parallel**, one per axis (domain model, build/test/lint commands, interfaces/contracts, dependencies, existing patterns). Each burns its own context and returns structured findings; the orchestrator synthesizes the `## Analysis` section.
 - **Phases 2–3 (Design/ADRs)** — for a genuinely contested decision, spawn parallel agents arguing each viable option (judge panel), then synthesize the ADR. For simple decisions, draft inline.
-- **Phase 5 (Implementation)** — execute via the **deterministic Workflow loop** (one fresh-context subagent per task). The orchestrator launches it, monitors, re-runs checkpoints, and surfaces gaps — it does **not** implement inline.
+- **Phase 5 (Implementation)** — the orchestrator runs a **per-task subagent loop** (one fresh-context subagent per task), monitors, re-runs checkpoints, and surfaces gaps — it does **not** implement inline. (Optionally accelerated by Dynamic Workflows where available — see Phase 5.)
 
 **Why this matters**: an orchestrator that does everything inline fills its own context, triggers compaction, and loses the thread. Delegation keeps the orchestrator thin (so it rarely compacts) and gives each unit of work a fresh context (so no single window carries the whole job). This is what restores the "listen to the human while monitoring ongoing work" behavior.
 
@@ -411,9 +411,9 @@ This checkpoint preserves the plan before implementation begins. The plan is the
 
 ### Phase 5 — Implement (autopilot)
 
-Work through TASKS.md session by session. **Execution is delegated and deterministic — the orchestrator does not implement inline.**
+Work through TASKS.md session by session. **Execution is delegated — the orchestrator does not implement inline.** It runs each task as its own subagent (the documented [subagents](https://code.claude.com/docs/en/sub-agents.md) feature), one at a time, and stays free to monitor and surface gaps.
 
-**Why a Workflow loop**: inline execution has two failure modes — (a) the orchestrator fills its context, compaction fires, and the in-flight thread is lost; (b) the model fails to advance sequential work on its own. A Workflow loop fixes both: each task runs as its own **fresh-context subagent** (no single window holds all of TASKS.md), and a deterministic `for` loop advances tasks regardless of model temperament. Implementation is human-pre-approved at the Phase 4c gate, so detaching from the conversation is *intended* — and it leaves the orchestrator free to monitor and to surface gaps. The orchestrator launches the Workflow, monitors progress, and on return **re-runs the session checkpoint itself** before trusting the result.
+**Why a per-task subagent loop**: inline execution has two failure modes — (a) the orchestrator fills its context, compaction fires, and the in-flight thread is lost; (b) the model drifts and fails to advance sequential work on its own. Delegating each task to a **fresh-context subagent** fixes both: no single window holds all of TASKS.md, and the orchestrator's loop — driven by the durable TASKS.md checklist, not by memory — advances tasks deterministically. After each subagent returns, the orchestrator **re-runs the session checkpoint itself** before trusting the result.
 
 **Session startup**: each task subagent loads every skill listed in its session's `Skills` field using the Skill tool. These provide the coding standards, build commands, and methodology for that session.
 
@@ -429,38 +429,19 @@ Work through TASKS.md session by session. **Execution is delegated and determini
 **Durability invariants** (these make execution compaction- and crash-proof):
 - **Check off a box only when its criterion is green; commit only on success.** A half-done task leaves no checkmark and no commit, so a re-run re-attempts it from clean state (idempotent).
 - **Advance the root `CLAUDE.md` `## Active workspaces` `task N/M` pointer after each task** — it is the durable resume anchor (see [Phase 0](#phase-0--resume-run-on-every-start)).
-- **The orchestrator re-runs the session checkpoint after the Workflow returns** — verifying real green state rather than trusting a subagent's "done" (a subagent can stop mid-task from its own compaction).
+- **The orchestrator re-runs the session checkpoint after each subagent returns** — verifying real green state rather than trusting a subagent's "done" (a subagent can stop mid-task from its own compaction).
 
-**Execution Workflow skeleton** (deterministic loop, one fresh-context subagent per task; the user's "go" at pre-flight is the natural opt-in):
+**The orchestrator loop** (documented subagents; the user's "go" at pre-flight is the trigger):
 
-```js
-export const meta = {
-  name: 'my-plan-autopilot',
-  description: 'Execute TASKS.md task-by-task with TDD and durable checkoff',
-  phases: [{ title: 'Execute' }],
-}
-// args = { workspace: 'docs/workspace/<NAME>', tasks: [...in dependency order] }
-const results = []
-for (const t of args.tasks) {
-  const r = await agent(
-    `Execute task ${t.id} from ${args.workspace}/TASKS.md. Load the session's Skills first.
-     TDD: failing test (red) -> implement (green) -> refactor -> run the verify command.
-     OUTSIDE-CONSTITUTION gap (ADR wrong / missing requirement / new dependency / unsatisfiable invariant)?
-       -> draft a 'proposed' ADR with options + recommendation in ${args.workspace}/adrs/,
-          do NOT implement the decision, return {status:'gap', adr, detail}.
-     Success -> check off acceptance criteria in TASKS.md, advance the CLAUDE.md pointer, commit,
-          return {status:'done', commit}.`,
-    { label: `task:${t.id}`, phase: 'Execute', schema: TASK_RESULT })
-  results.push({ task: t.id, ...r })
-  if (r.status === 'gap') {
-    // park this task's dependents; keep independent tasks moving; collect proposed ADRs
-    log(`Gap at task ${t.id} — drafted proposed ADR, continuing with independent tasks`)
-  }
-}
-return results
-```
+1. From TASKS.md, take the first unchecked task whose `Depends on` tasks are all done.
+2. Spawn a subagent for it (the Agent/Task tool), passing the task spec and instructing it to follow the per-task contract above. The subagent loads the session's `Skills` first.
+3. When it returns, re-run the verify/checkpoint command yourself. If green and the box is checked, advance the `CLAUDE.md` pointer and move on; otherwise re-open the task.
+4. On a `gap` result, draft/collect the `proposed` ADR, park that task and its dependents, and pick the next independent task (see severity 3 below).
+5. Repeat until the session's tasks are done, then run the session checkpoint and commit.
 
-Resume after a stop is `Workflow({scriptPath, resumeFromRunId})` — completed task calls replay from cache instantly; the first incomplete/new task and everything after runs live. Durable checkoff means a plain re-run also works: done tasks are simply skipped.
+The loop is driven by the **on-disk checklist**, not conversational memory — so a restart (new session, `/clear`, compaction) resumes by re-reading TASKS.md (Phase 0), not by remembering where it was. Long runs can be paced with [`/loop`](https://code.claude.com/docs/en/scheduled-tasks.md) so the orchestrator wakes, advances one task, and checkpoints. Sessions that must run concurrently can use [worktrees](https://code.claude.com/docs/en/worktrees.md) for isolation.
+
+**Optional accelerator (research preview)**: where [Dynamic Workflows](https://code.claude.com/docs/en/workflows.md) is available, the same loop can run as one deterministic script — a `for` over tasks, one `agent()` call each, with `resumeFromRunId` replaying completed tasks instantly. This is a portability-optional speed-up; the orchestrator loop above is the baseline and works anywhere subagents do.
 
 **Autonomy model**: tasks define goals and constraints, not step-by-step scripts — the agent decides *how* to achieve them. The constitution (defined above) is the boundary. See the constitution section for what the agent can and cannot do autonomously.
 
