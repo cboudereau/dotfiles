@@ -100,21 +100,18 @@ If the constitution is well-built, the agent never stops. If it's incomplete, th
 
 ## Session continuity
 
-Claude Code's built-in plan mode (`EnterPlanMode`) stores ephemeral plans in `~/.claude/plans/`. These are conversation-scoped and do not survive sessions. **Do not use built-in plan mode for this skill** — use `docs/workspace/` instead, which is project-scoped and committed to git.
+Do **not** use Claude Code's built-in plan mode (`EnterPlanMode`) for this skill — its plans are conversation-scoped and do not survive. Use `docs/workspace/`, which is project-scoped and committed to git.
 
-To allow Claude to discover active workspaces — and to **resume after context compaction** — add a **self-describing** entry to the project's **root** `CLAUDE.md`. Root `CLAUDE.md` is re-read from disk and re-injected after compaction, `/clear`, and restart; nested `CLAUDE.md` is *not*, so the entry must live at the root.
+Register each active workspace in the project's **root** `CLAUDE.md` so any later session can find and resume it. The pointer is self-describing — it carries both the state and how to act on it:
 
 ```markdown
 ## Active workspaces
 - [order-system](docs/workspace/order-system/TASKS.md) — Phase 5, task 4/7
   RESUME: load the `my-plan` skill, then read TASKS.md (checked = done) + `git log --oneline`;
   continue at first unchecked task; re-run the session checkpoint before trusting state.
-  Per-session implementation skills are listed in TASKS.md.
 ```
 
-The entry is **self-describing on purpose**. `SKILL.md` is not auto-loaded, so after compaction the only thing guaranteed to survive is root `CLAUDE.md` — it must therefore carry both the state pointer *and* the instruction to act on it. It names only the **`my-plan`** skill: the bootstrap needed to resume the protocol. The per-session implementation skills (`software-engineer`, language extensions, …) live in TASKS.md and load at session startup — naming them here would only create drift.
-
-Update this entry **after every task** (advance `task N/M`), not just at session end — it is the durable resume anchor. Remove it when the workspace is integrated (Phase 6). See [Phase 0 — Resume](#phase-0--resume-run-on-every-start) for the full protocol.
+Name only the `my-plan` skill here; per-session implementation skills live in TASKS.md. Update the pointer after every task; remove it at integration (Phase 6). Full steps: [Phase 0 — Resume](#phase-0--resume-run-on-every-start).
 
 ## Rules
 
