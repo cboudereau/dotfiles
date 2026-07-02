@@ -1,5 +1,5 @@
 ---
-name: code-review
+name: my-code-review
 description: "Code review principles and checklist for reviewing any codebase regardless of language. Use when the user asks to review code, perform a code review, assess a pull request, or evaluate code quality across design, tests, performance, security, and correctness."
 ---
 # Code Review

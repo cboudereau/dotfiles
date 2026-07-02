@@ -32,7 +32,7 @@ This persona extends the [Software Engineer](../software-engineer/SKILL.md) base
 
 Agent should follow the given approach:
 
-1. Plan (see plan skill)
+1. Plan (see my-plan skill)
 2. Test (see tdd skill)
 3. Implement (see code-quality and dotnet-build skills)
 4. Commit (see git-conventions skill)
