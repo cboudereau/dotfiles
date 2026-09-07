@@ -1,0 +1,4 @@
+function cloclo () {
+    local name=$1
+    claude -n ${name}
+}
