@@ -13,7 +13,7 @@ description: "Read GitLab merge request review comments and answer them with cod
 
 ## Overview
 
-Read review discussions from GitLab with `glab`, turn them into a markdown
+Read review discussions from GitLab with `glab`, turn them into a table
 preview of proposed code suggestions, and only write to GitLab after the user
 approves the preview.
 
@@ -79,7 +79,34 @@ Reply and resolve on the MR that carries the thread, not the one that carries th
 
 ## Preview format
 
-For the live preview, be concise.
+For the live preview, be concise: one row per thread, two tables.
+
+**Replies** to existing reviewer threads, which is the main case:
+
+```markdown
+| # | File:line | Discussion | Reviewer comment (verbatim) | Reply | Suggestion | Resolve? |
+|---|---|---|---|---|---|---|
+| 1 | src/Domain/Booking.cs:42 | abc12345 | "Verbatim reviewer comment." | Agreed, null check added | `-0+0` `if (booking is null) return NotFound();` | yes |
+| 2 | src/Api/Handler.cs:17 | def67890 | "Verbatim reviewer comment." | Fixed, test still to add | `-1+2` one-line summary | no - test missing |
+| 3 | general | 0123abcd | "Verbatim reviewer comment." | Question back to reviewer | none | no - needs @user |
+```
+
+**New comments** on lines with no existing thread:
+
+```markdown
+| # | File:line | Comment | Suggestion |
+|---|---|---|---|
+| 4 | src/Domain/Booking.cs:58 | Same null check as thread 1 applies here | `-0+0` one-line summary |
+```
+
+End with **Not addressed:** item, reason.
+
+Column rules:
+- **File:line** is `new_path:new_line`, or `general` for a non-diff thread.
+- **Discussion** is the eight-character id prefix; keep the full id for the write.
+- **Reviewer comment** is quoted verbatim, trimmed with `...` only when long.
+- **Suggestion** is the range plus the replacement when it fits one line, otherwise a summary; the full fenced block goes in the markdown file or the note body.
+- **Resolve?** is `yes` for `reply + resolve`, or `no - reason` for `reply only` and `leave open`. It maps to the Disposition below.
 
 Every thread in the preview carries a **Disposition**, whatever the output format.
 It is a required field with exactly one of three values:
