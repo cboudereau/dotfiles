@@ -2,6 +2,8 @@
 input=$(cat)
 
 model=$(echo "$input" | jq -r '.model.display_name // "Unknown"')
+cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
+cwd="${cwd/#$HOME/~}"
 used=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 tokens_used=$(echo "$input" | jq -r '.context_window.total_input_tokens // empty')
 tokens_max=$(echo "$input" | jq -r '.context_window.context_window_size // empty')
@@ -43,6 +45,10 @@ fi
 
 if [ -n "$week_pct" ]; then
   out="$out | week $(printf "%.0f%%" "$week_pct")"
+fi
+
+if [ -n "$cwd" ]; then
+  out="$out | $cwd"
 fi
 
 printf "%s" "$out"
