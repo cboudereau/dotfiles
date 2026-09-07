@@ -26,11 +26,11 @@ set -g status-right-length 250
 set-option -g status-style fg=$base02,bg=$base00,default
 
 set-window-option -g window-status-style fg=$base03,bg=$base00
-set-window-option -g window-status-format " #I #W"
+set-window-option -g window-status-format " #I #W #[fg=$base04]#{s|$HOME|~|:pane_current_path}"
 
 # active window title colors
 set-window-option -g window-status-current-style fg=$base0C,bg=$base00
-set-window-option -g window-status-current-format " #I #[bold]#W"
+set-window-option -g window-status-current-format " #I #[bold]#W #[nobold,fg=$base03]#{s|$HOME|~|:pane_current_path}"
 
 # pane border colors
 set-window-option -g pane-active-border-style fg=$base0C
