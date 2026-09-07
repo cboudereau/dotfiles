@@ -14,10 +14,14 @@ description: "Read GitLab merge request review comments and answer them with cod
 ## Overview
 
 Read review discussions from GitLab with `glab`, turn them into a markdown
-preview of proposed code suggestions, and only post to GitLab after the user
+preview of proposed code suggestions, and only write to GitLab after the user
 approves the preview.
 
-The flow is always: **read -> preview -> approve -> post**. Never post first.
+The flow is always: **read -> preview -> approve -> post + resolve**. Never write first.
+
+One approval covers the whole write. The preview states, per thread, both the reply
+and whether that thread gets resolved; the user approves once; posting then does both
+in the same pass. Never come back to ask about resolving after posting the replies.
 
 For first time code review, just do the usual code review.
 
@@ -26,7 +30,10 @@ For any code review, confirm skills used before.
 ## Rules
 
 1. Always preview suggestions and wait for explicit approval before any write to GitLab.
-2. Never resolve, unresolve, approve, merge, close, update, or delete anything. Those are the user's calls.
+2. Resolve every approved thread whose preview **Disposition** said `reply + resolve`. This
+   is required, not optional, and happens in the same pass as the reply — see
+   "Posting after approval". Never unresolve, approve, merge, close, or delete anything:
+   those stay the user's calls.
 3. Never `git push`. See the `git-conventions` skill.
 4. Quote the reviewer's comment verbatim in the preview. Do not paraphrase feedback.
 5. Read the actual file around the referenced line before proposing a suggestion. Never suggest code from the comment text alone.
@@ -67,9 +74,25 @@ glab mr diff <iid>
 glab mr view <iid> -F json --jq '.diff_refs'   # base_sha, head_sha, start_sha
 ```
 
+Note the comments may live on an **earlier** MR while the fix lives in a follow-up MR.
+Reply and resolve on the MR that carries the thread, not the one that carries the code.
+
 ## Preview format
 
 For the live preview, be concise.
+
+Every thread in the preview carries a **Disposition**, whatever the output format.
+It is a required field with exactly one of three values:
+
+| Disposition | Meaning | Write on approval |
+|---|---|---|
+| `reply + resolve` | The comment is answered and the ask is done | reply, then resolve |
+| `reply only` | Answered, but something real is still outstanding — say what | reply, leave open |
+| `leave open` | Needs the user, another person, or a decision — say who or what | nothing |
+
+`reply + resolve` is the normal case for a comment whose ask has landed. Reaching for
+`reply only` to stay safe leaves the user to close threads by hand, which is the work
+this skill exists to remove.
 
 In case of a markdown output is asked, create one section per unresolved thread to
 `<scratchpad>/mr-<iid>-suggestions.md`:
@@ -80,6 +103,8 @@ In case of a markdown output is asked, create one section per unresolved thread 
 > Verbatim reviewer comment.
 
 **Assessment:** what the comment is actually asking, and whether it holds.
+
+**Disposition:** reply + resolve
 
 **Current code** (src/Domain/Booking.cs:40-44):
 ```csharp
@@ -94,7 +119,9 @@ In case of a markdown output is asked, create one section per unresolved thread 
 
 End the file with a short **Not addressed** list for anything skipped, with the reason.
 
-Then ask the user which numbered items to post. Post only those.
+Then ask one question: which numbered items to write, taking the previewed dispositions
+as read. Write only those, and resolve exactly the approved `reply + resolve` ones.
+If the user narrows or overrides a disposition in their answer, theirs wins.
 
 ## Suggestion syntax
 
@@ -111,7 +138,10 @@ Rules:
 
 ## Posting after approval
 
-Reply inside the reviewer's own thread, which is the default choice:
+Two writes per approved `reply + resolve` thread, in this order. A thread is not done
+after the reply.
+
+**1. Reply** inside the reviewer's own thread, which is the default choice:
 
 ```bash
 glab mr note create <iid> --reply <discussion-id> -m "$(cat body.md)"
@@ -126,9 +156,36 @@ glab mr note create <iid> --file src/Domain/Booking.cs --old-line 42 -m "..."   
 ```
 
 Write the body to a file first with a heredoc, because fenced blocks and backticks do
-not survive inline shell quoting. Add `--unique` to avoid duplicate posts on a retry.
+not survive inline shell quoting. `--file`, `--reply` and `--unique` are mutually
+exclusive, so a reply cannot carry `--unique`: to stay idempotent on a retry, re-read
+the thread and skip the ones that already have your note.
 
-Report the posted note ids back to the user, and list the threads left untouched.
+**2. Resolve** the thread. `glab` has no resolve verb, so go through the API — the
+discussion id is the same one `--reply` took:
+
+```bash
+glab api --method PUT "projects/<project-id>/merge_requests/<iid>/discussions/<discussion-id>?resolved=true"
+```
+
+Get `<project-id>` once with `glab repo view -F json --jq .id`, or use the URL-encoded
+path (`d-edge%2F...`). Requires the full discussion id, not the eight-character prefix.
+
+**Then verify and report**, in one message: the posted note ids, which threads are now
+resolved, and which stay open with the reason from their disposition.
+
+```bash
+glab mr note list <iid> -F json --jq '[.[] | {id, resolved: ([.notes[] | select(.system==false) | .resolved] | any)}]'
+```
+
+## Red flags - the write is not finished
+
+- Replies posted, resolve left for the user
+- "Resolving is the user's call" — it was, at preview time, and they answered
+- A second question about resolving after the replies are already up
+- Every thread previewed as `reply only` with no outstanding item named
+- Reporting note ids without saying which threads are resolved
+
+**All of these mean: go back and resolve the approved threads now.**
 
 ## Setup
 
