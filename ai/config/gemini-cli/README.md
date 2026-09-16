@@ -2,5 +2,5 @@
 
 ## install
 ```bash
-cp -r ai/config/_/skills ~/.gemini/
+cp -r ai/config/claude/skills/ni/skills ~/.gemini/
 ```
