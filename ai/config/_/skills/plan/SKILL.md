@@ -1,5 +1,5 @@
 ---
-name: my-plan
+name: plan
 description: "Personal planning skill for complex, multi-session work with durable workspace artifacts and autopilot execution. Use when the user asks to plan a feature, design a system, create a workspace, write a design doc, resume an active workspace, or when a problem requires structured analysis before implementation. Distinct from Claude Code's built-in plan mode — this produces project-scoped, committed artifacts."
 ---
 # Plan
@@ -105,7 +105,7 @@ If the constitution is well-built, the agent never stops. If it's incomplete, th
 Before doing anything else — including after context compaction, `/clear`, or a new session — reconstruct state from disk. **Disk and git are the source of truth; never trust conversational memory for where work stands.**
 
 1. Read root `CLAUDE.md` `## Active workspaces` → find the active workspace and phase.
-2. If a workspace is active, load the `my-plan` skill (this file) and read its `TASKS.md`.
+2. If a workspace is active, load the `plan` skill (this file) and read its `TASKS.md`.
 3. In TASKS.md: checked acceptance criteria = done; the first unchecked task is the resume point.
 4. Run `git log --oneline` and the active session's checkpoint command → confirm what is actually committed and green.
 5. Resume at the first unchecked task. If the checkpoint disagrees with the checkboxes, trust the checkpoint and re-open the affected task.
@@ -118,12 +118,12 @@ Create the workspace and register it in the project's root `CLAUDE.md`. Name it 
 ```bash
 mkdir -p docs/workspace/<NAME>/adrs
 ```
-Add a self-describing entry under `## Active workspaces` — this is the resume anchor (Phase 0 reads it; update it after every task; remove it at Phase 6). Name only the `my-plan` skill; per-session skills live in TASKS.md.
+Add a self-describing entry under `## Active workspaces` — this is the resume anchor (Phase 0 reads it; update it after every task; remove it at Phase 6). Name only the `plan` skill; per-session skills live in TASKS.md.
 
 ```markdown
 ## Active workspaces
 - [<NAME>](docs/workspace/<NAME>/TASKS.md) — Phase 5, task 4/7
-  RESUME: load the `my-plan` skill, then read TASKS.md (checked = done) + `git log --oneline`;
+  RESUME: load the `plan` skill, then read TASKS.md (checked = done) + `git log --oneline`;
   continue at first unchecked task; re-run the session checkpoint before trusting state.
 ```
 
