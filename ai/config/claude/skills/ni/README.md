@@ -30,20 +30,18 @@ ni injects a terse reply ruleset at session start and reminds Claude every turn,
 | `full` | Also drops articles, allows fragments. |
 | `off` | Nothing injected. |
 
-Switch with `/ni:terse lite|full|off`. The level persists in `~/.claude/ni/terse`. Commits, docs, MR text, and security warnings always stay in normal prose.
+Switch with `/ni:terse lite|full|off`. The level persists in `~/.claude/ni/terse`. Persisted text (docs, MR text, comments, commit messages) follows lite rules whatever the level; code and security warnings stay in normal prose.
 
 ## Skills
 | Skill | Use when |
 |---|---|
 | `ni:terse` | The terse ruleset itself, for reference or manual invocation |
-| `ni:software-engineer` | Implementing, fixing, or refactoring with the plan, test, implement, commit workflow |
+| `ni:software-engineer` | Implementing, fixing, or refactoring with the plan, test, implement, commit workflow; Rust and .NET build, test, and coverage commands |
 | `ni:tdd` | Writing tests first, red-green-refactor |
 | `ni:plan` | Multi-session work with a durable workspace, design doc, and ADRs |
 | `ni:git-conventions` | Any git operation, commit messages, MR or PR descriptions |
 | `ni:review-conventions` | Reviewing a change or answering reviewer comments |
 | `ni:gitlab-review` | Reading and replying to GitLab MR threads with glab |
-| `ni:dotnet-build` | Building, testing, or measuring coverage on .NET |
-| `ni:rust-build` | Building, testing, linting, or measuring coverage on Rust |
 | `ni:evidence-based-analysis` | Any claim about the codebase, cited by file and line |
 
 Run `/ni:help` inside Claude for the same list.

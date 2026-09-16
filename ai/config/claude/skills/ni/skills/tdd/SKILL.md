@@ -20,7 +20,7 @@ is worth anything.
 ## Rules
 
 1. Preserve file encoding
-2. Analyse the test setup: which framework is actually used, how to build, how to run tests, how to read coverage (see the build skill for the stack in [`software-engineer`](../software-engineer/SKILL.md))
+2. Analyse the test setup: which framework is actually used, how to build, how to run tests, how to read coverage (see the stack file in [`software-engineer`](../software-engineer/SKILL.md))
 3. Create a failing acceptance test if it does not exist. Add unit tests for small cases or technical parts.
 4. Watch the test fail for the expected reason before writing any implementation
 5. Implement the feature. Check first that the function does not already exist.
