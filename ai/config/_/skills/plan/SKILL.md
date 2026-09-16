@@ -1,6 +1,6 @@
 ---
 name: plan
-description: "Personal planning skill for complex, multi-session work with durable workspace artifacts and autopilot execution. Use when the user asks to plan a feature, design a system, create a workspace, write a design doc, resume an active workspace, or when a problem requires structured analysis before implementation. Distinct from Claude Code's built-in plan mode — this produces project-scoped, committed artifacts."
+description: "Use when the user asks to create a workspace, write a design doc or ADR, break work into sessions and tasks for autopilot, resume an active workspace, or integrate workspace artifacts into docs. For complex, multi-session work only; small plans use Claude Code's built-in plan mode."
 ---
 # Plan
 
@@ -133,48 +133,7 @@ DESIGN.md is the entry point. It must be written before anything else.
 
 Each FR and NFR gets an anchor for cross-referencing:
 
-```markdown
-# <NAME> — Design Doc
-
-## Context
-Why this work exists.
-
-## Functional Requirements
-
-### <a id="fr1"></a>FR1 — Short title
-Description of what the system must do.
-
-### <a id="fr2"></a>FR2 — Short title
-Description.
-
-## Non-Functional Requirements
-
-### <a id="nfr1"></a>NFR1 — Short title
-Constraint: performance, security, availability, compliance.
-
-## Non-goals
-What this design explicitly does not address.
-
-Before listing a non-goal, verify it is truly out of scope:
-- **Already covered?** Check whether existing behavior, architecture, or a planned feature already provides the capability. If it does, it is not a non-goal — it is a fact to document (e.g., "OR composition is already provided by the first-match-wins evaluation order").
-- **Deferred or excluded?** If it is genuinely not covered and not planned, state *why* it is excluded (cost, complexity, low priority) so the decision can be revisited later.
-- **Misclassified FR?** If exploration reveals the capability is actually needed for the stated goals, promote it to an FR instead.
-
-A non-goal that turns out to be already solved is a planning error — it signals incomplete analysis of the existing system.
-
-## Rabbit holes
-Areas of known uncertainty where unbounded time could be lost.
-For each: state what to avoid and the constraint that caps exploration.
-
-## Design
-Architecture, C4 diagrams (levels 1-2 via Mermaid), data model, interfaces.
-
-Decisions:
-- [Decision title](./adrs/decision-name.md)
-
-## Cross-cutting Concerns
-Observability, migration, rollback.
-```
+Template: [templates/DESIGN.md](templates/DESIGN.md). Read it before drafting.
 
 ### Phase 3 — Write ADRs
 
@@ -189,29 +148,7 @@ An ADR records any decision worth explaining. ADRs emerge during design and cont
 
 ADRs link back to the requirements they address:
 
-```markdown
----
-status: draft
----
-# Decision title
-
-Addresses: [FR2](../DESIGN.md#fr2), [NFR1](../DESIGN.md#nfr1)
-
-## Problem
-What needs to be decided and why.
-
-## Options
-| Option | Pros | Cons |
-|---|---|---|
-| Option A | ... | ... |
-| Option B | ... | ... |
-
-## Decision
-Which option and why.
-
-## Consequences
-What becomes easier or harder.
-```
+Template: [templates/adr.md](templates/adr.md). Read it before drafting.
 
 ADR status lifecycle: `draft` -> `proposed` -> `accepted` -> `superseded-by <ref>`
 
@@ -249,109 +186,7 @@ Each task is derived from a FR or NFR. Each task must be **self-contained**: an 
 
 Task references are clickable links to DESIGN.md anchors and relevant ADRs:
 
-```markdown
-# <NAME> — Tasks
-
-Design: [DESIGN.md](./DESIGN.md)
-
-## Analysis
-
-Build: `<exact build command>` — verified green
-Test: `<exact test command>` — verified green
-Lint: `<exact lint command>` — verified green
-
-### Known-failing tests
-| Test | Reason | Action |
-|---|---|---|
-| (none — or list pre-existing failures) | | ignore / skip |
-
-### Domain model
-
-```mermaid
-classDiagram
-    class Order {
-        +OrderId id
-        +CustomerId customer
-        +List~LineItem~ items
-        +Money total()
-    }
-    class LineItem {
-        +ProductId product
-        +Quantity qty
-        +Money unit_price
-    }
-    Order "1" *-- "*" LineItem
-
-    class OrderRepository {
-        <<trait>>
-        +save(Order) Result
-        +find_by_id(OrderId) Option~Order~
-    }
-
-    class CreateOrder {
-        <<fn>>
-        +CreateOrderCmd → Result~Order, DomainError~
-    }
-```
-
-### Requirement traceability
-| Type / Trait / Fn | Addresses | Notes |
-|---|---|---|
-| `Order` | [FR1](./DESIGN.md#fr1) | Aggregate root |
-| `LineItem` | [FR1](./DESIGN.md#fr1) | Value object, immutable |
-| `OrderRepository` | [NFR1](./DESIGN.md#nfr1) | Trait — infra implements |
-| `CreateOrder` | [FR2](./DESIGN.md#fr2) | Validates invariants before persisting |
-
-### Transformations
-| Function | Input → Output | Invariant / Rule |
-|---|---|---|
-| `CreateOrder` | `CreateOrderCmd → Result<Order, DomainError>` | At least one line item, total > 0 |
-| `Order::total` | `&self → Money` | Sum of (qty × unit_price) per line item |
-
-## Tasks
-
-### 1. Task title ([FR1](./DESIGN.md#fr1), [NFR2](./DESIGN.md#nfr2))
-**Goal**: Why this task exists (one sentence).
-**Types**: `Order`, `LineItem` — see domain model
-**Constraints**: rules the implementation must respect
-- [ADR: decision-name](./adrs/decision-name.md) — the constraint from this decision
-- Invariant: `Order` must always have at least one `LineItem`
-- Transformation: `CreateOrderCmd → Result<Order, DomainError>` must enforce total > 0
-**Tests**: what to test before implementing (red → green)
-- `test_order_requires_at_least_one_line_item` — creating an Order with empty items returns error
-- `test_order_total_sums_line_items` — total equals sum of qty × unit_price
-**Verify**: `cargo test -- test_bar && cargo clippy`
-**Acceptance criteria**:
-- [ ] Criterion 1 (pass/fail, no subjective language)
-- [ ] Criterion 2
-**Depends on**: (none) | task 2
-**Time-box**: ~45 min
-
-## Sessions
-
-Group tasks into autonomous sessions. Each session is a contiguous block of work (target: 2–4H) that ends with a verifiable checkpoint. An agent completes one session, verifies, then proceeds to the next. Minimize the number of sessions — fewer, longer sessions mean fewer interruptions.
-
-### Session 1 — <title> (~2.5H)
-Tasks: 1, 2, 3, 4, 5
-**Skills**: `software-engineer` (+ language-specific extension for the project)
-**Checkpoint**: `<exact command that proves session is complete>`
-**Commit point**: yes — commit after checkpoint passes
-
-### Session 2 — <title> (~2H)
-Tasks: 6, 7, 8
-**Skills**: `software-engineer`
-**Checkpoint**: `<exact command>`
-**Commit point**: yes
-
-## Quality gates (post-session review)
-- [ ] Acceptance criteria: all green above
-- [ ] Code review: implementation matches [DESIGN.md](./DESIGN.md) intent
-- [ ] Code organization: file placement, module structure, naming conventions (refactoring pass)
-- [ ] Code quality: no new complexity, clean types, no duplication
-- [ ] Security review: OWASP check, dependency audit, no secrets exposed
-- [ ] Observability: relevant metrics identified, dashboards/alerts in place, logging covers key paths
-- [ ] Performance: NFR targets met, no regressions on critical paths, load tested if applicable
-```
+Template: [templates/TASKS.md](templates/TASKS.md). Read it before drafting.
 
 **Uncertainty tracking** (inspired by Shape Up's hill chart):
 - `uphill` = figuring it out — the problem or approach is not yet understood. May trigger new ADRs or design changes.
@@ -495,7 +330,7 @@ README updated. Workspace deleted — git history preserves TASKS.md.
 
 ## Cross-referencing
 
-Every identifier or reference in any document must be a clickable link to its definition. If an identifier appears and is not a link, it is a defect. The templates above show the linking conventions — follow them consistently.
+Every identifier or reference in any document must be a clickable link to its definition. If an identifier appears and is not a link, it is a defect. The files in `templates/` show the linking conventions — follow them consistently.
 
 ## Amending existing work
 

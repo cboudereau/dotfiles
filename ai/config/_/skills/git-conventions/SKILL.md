@@ -17,8 +17,8 @@ description: "Use when the user asks to commit, stage, branch, diff, write a com
 Rules for safe and consistent git usage, from the commit to the change description.
 
 Platform-specific tooling lives in its own skill: for GitLab (`glab`), see the
-`gitlab-review` skill. Reviewing code or answering review feedback is the
-`code-review` skill.
+[`gitlab-review`](../gitlab-review/SKILL.md) skill. Reviewing code or answering review feedback is the
+[`review-conventions`](../review-conventions/SKILL.md) skill.
 
 ## Rules
 Before committing, the code must compile and tests must be successful without failing / ignored tests.
@@ -28,9 +28,8 @@ Before committing, the code must compile and tests must be successful without fa
 1. Never use the command `push`.
 2. Never use the option `force` `--force`.
 3. Never amend commit to modify files, prefer adding more commits (fix commit) and explain the error/reason.
-4. Before running a new git command, ask to add it in the allow list.
-5. Do not hesitate to use git when checking differences with the previous version.
-6. A task should be committed when tests pass (with assertions) and code coverage is verified.
+4. Do not hesitate to use git when checking differences with the previous version.
+5. A task should be committed when tests pass (with assertions) and code coverage is verified.
 
 ## Commit message
 

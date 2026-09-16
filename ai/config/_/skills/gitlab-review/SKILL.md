@@ -15,9 +15,9 @@ description: "Use when working with a GitLab merge request through the glab CLI:
 GitLab-specific tooling for the review flow. It provides the `glab` commands and API
 calls; the flow itself is not here.
 
-**REQUIRED BACKGROUND:** the `code-review` skill defines the flow (read -> preview ->
+**REQUIRED BACKGROUND:** the [`review-conventions`](../review-conventions/SKILL.md) skill defines the flow (read -> preview ->
 approve -> post + resolve), the preview format, the Disposition rules, and the red
-flags. Load it first. Git rules (never push) are in the `git-conventions` skill.
+flags. Load it first. Git rules (never push) are in the [`git-conventions`](../git-conventions/SKILL.md) skill.
 
 ## Reading the review
 
@@ -102,7 +102,7 @@ glab api --method PUT "projects/<project-id>/merge_requests/<iid>/discussions/<d
 Get `<project-id>` once with `glab repo view -F json --jq .id`, or use the URL-encoded
 path (`d-edge%2F...`). Requires the full discussion id, not the eight-character prefix.
 
-**3. Verify** before reporting, as the `code-review` skill requires:
+**3. Verify** before reporting, as the [`review-conventions`](../review-conventions/SKILL.md) skill requires:
 
 ```bash
 glab mr note list <iid> -F json --jq '[.[] | {id, resolved: ([.notes[] | select(.system==false) | .resolved] | any)}]'

@@ -1,15 +1,15 @@
 ---
-name: code-review
-description: "Use when the user asks to review code, perform a code review, assess a pull request or merge request, or evaluate a change across design, tests, performance, security, and correctness. Also use when the user asks to read, address, answer, or reply to review comments or threads, or to prepare a plan from review feedback, on any platform."
+name: review-conventions
+description: "Use when the user asks for a full review of a change, pull request, or merge request against the personal checklist, covering design, tests, performance, security, and correctness. Also use when the user asks to read, address, answer, or reply to reviewer comments or threads, or to prepare a plan from reviewer feedback, on any platform."
 ---
-# Code Review
+# Review Conventions
 
 > Based on "What to look for in a code review" by Trisha Gee (Java Champion, JetBrains) and [personal notes](https://cboudereau.github.io/bookworm/2023-01-23_Code_Review/)
 
 ## When to use
 
 - User asks to review code, a pull request, or a merge request
-- User asks for a code review checklist
+- User asks for the review checklist
 - User wants to assess the quality of a change
 - User mentions design, readability, test coverage, security, or correctness concerns
 - User asks what reviewers said, or to address, answer, or reply to review feedback
@@ -17,16 +17,37 @@ description: "Use when the user asks to review code, perform a code review, asse
 
 ## Overview
 
-Two sides of a code review, both language- and platform-agnostic:
+Two sides of a review, both language- and platform-agnostic:
 
-1. **Giving a review** — the checklist below. Reviews should reduce cognitive load,
-   catch correctness issues, and share knowledge — not just find bugs.
+1. **Giving a review** — the built-in review, then the checklist below run by two
+   subagents. Reviews should reduce cognitive load, catch correctness issues, and
+   share knowledge — not just find bugs.
 2. **Answering a review** — the flow in "Answering review feedback". Read, preview,
    get approval, then write. Never write first.
 
 Platform commands (reading threads, posting replies, resolving) live in a platform
-skill: for GitLab, load the `gitlab-review` skill. Git rules (no push, commit
-messages) are in the `git-conventions` skill.
+skill: for GitLab, load the [`gitlab-review`](../gitlab-review/SKILL.md) skill. Git rules (no push, commit
+messages) are in the [`git-conventions`](../git-conventions/SKILL.md) skill.
+
+## Giving a review
+
+Three steps, in this order. Do not start the checklist before step 1 has returned.
+When the diff is under 50 changed lines, run step 2 inline instead of with subagents.
+
+1. **Built-in review first.** Run Claude Code's built-in `code-review` skill (the diff
+   reviewer for correctness bugs and simplification) on the same target, at the effort
+   level the user gave, or medium when none was given. Keep its findings.
+2. **Checklist with two subagents in parallel.** Dispatch two subagents in the same
+   message, each with the diff target and its half of the checklist below:
+   - Subagent 1: Design, Readability & Maintainability, Tests (items 1-16)
+   - Subagent 2: Performance, Data Structures, Security, Correctness, Cross-cutting (items 17-36)
+
+   Each subagent reads the actual code around every finding and returns one line per
+   finding: checklist item, `file:line`, what is wrong, why it matters, suggested fix.
+   No finding without a `file:line`.
+3. **Merge and report once.** Drop checklist findings the built-in review already
+   reported, dedupe across the two subagents, rank by severity, and report in one
+   message. Say which step each finding came from.
 
 ## Checklist
 
@@ -54,48 +75,48 @@ messages) are in the `git-conventions` skill.
 14. **Edge cases** — Cardinality (empty, single, many), nullability, boundary values, error paths
 15. **Limitations** — Are test limitations intentional and documented, or accidental gaps?
 16. **Performance & security tests** — Are they needed? Are they present?
-17. **Pair review option** — Reviewers can write missing tests as part of the review
 
 ### Performance
 
-18. **Requirements** — Does the implementation meet the stated performance requirements?
-19. **Readability vs performance trade-off** — Only optimise when measurements justify it
-20. **Network cost** — Are batching and call counts considered?
-21. **Resource management** — Are connections, streams, and handles properly closed?
-22. **Memory leaks** — Are data lifecycle and collection bounds controlled?
-23. **Locks & race conditions** — Are shared resources properly protected?
-24. **Concurrency vs parallelism** — Is the right model applied?
-25. **Pool configuration** — Use safe defaults; only tune with evidence
+17. **Requirements** — Does the implementation meet the stated performance requirements?
+18. **Readability vs performance trade-off** — Only optimise when measurements justify it
+19. **Network cost** — Are batching and call counts considered?
+20. **Resource management** — Are connections, streams, and handles properly closed?
+21. **Memory leaks** — Are data lifecycle and collection bounds controlled?
+22. **Locks & race conditions** — Are shared resources properly protected?
+23. **Concurrency vs parallelism** — Is the right model applied?
+24. **Pool configuration** — Use safe defaults; only tune with evidence
 
 ### Data Structures
 
-26. **Right choice** — Is the data structure appropriate for the access pattern and complexity (Big-O)?
-27. **Pitfalls** — Watch for lazy evaluation traps, infinite streams, or iterator invalidation
-28. **Optionality** — Is absence of a value modelled explicitly (Option/Maybe/Optional) rather than null?
+25. **Right choice** — Is the data structure appropriate for the access pattern and complexity (Big-O)?
+26. **Pitfalls** — Watch for lazy evaluation traps, infinite streams, or iterator invalidation
+27. **Optionality** — Is absence of a value modelled explicitly (Option/Maybe/Optional) rather than null?
 
 ### Security
 
-29. **Automated checks** — Are dependency scanners (e.g. Dependabot) and SAST tools in CI?
-30. **Dependency surface** — Are new dependencies justified and minimal?
-31. **Regulatory requirements** — Does the change touch data subject to compliance rules (GDPR, PCI, …)?
+28. **Automated checks** — Are dependency scanners (e.g. Dependabot) and SAST tools in CI?
+29. **Dependency surface** — Are new dependencies justified and minimal?
+30. **Regulatory requirements** — Does the change touch data subject to compliance rules (GDPR, PCI, …)?
 
 ### Correctness
 
-32. **Wrong data structure** — Could the structure cause subtle bugs (e.g. set vs list, map ordering)?
-33. **Race conditions** — Is concurrent access safe?
-34. **Caching** — Are cache invalidation and staleness handled correctly?
+31. **Wrong data structure** — Could the structure cause subtle bugs (e.g. set vs list, map ordering)?
+32. **Race conditions** — Is concurrent access safe?
+33. **Caching** — Are cache invalidation and staleness handled correctly?
 
 ### Cross-cutting Concerns
 
-35. **Documentation impact** — Does the change require updating docs, ADRs, or READMEs?
-36. **UI / error messages** — Are user-visible messages clear, actionable, and tested?
-37. **Automated vs human review split** — Delegate formatting/style to linters; focus human review on design and logic
+34. **Documentation impact** — Does the change require updating docs, ADRs, or READMEs?
+35. **UI / error messages** — Are user-visible messages clear, actionable, and tested?
+36. **Automated vs human review split** — Delegate formatting/style to linters; focus human review on design and logic
 
 ## Culture
 
 - Share tooling: IDE configs, linter rules, and CI checks should be committed and consistent
 - Reviewers should ask "Have you thought about…?" for security, edge cases, and docs — not just critique
 - Prefer collaborative tone; a review is a knowledge-sharing session, not an audit
+- Pair review option: a reviewer can write the missing tests as part of the review, as a follow-up to the findings
 
 ## Answering review feedback
 
@@ -117,7 +138,7 @@ For any review, confirm which skills were used before.
 2. Resolve every approved thread whose preview **Disposition** said `reply + resolve`.
    This is required, not optional, and happens in the same pass as the reply.
    Never unresolve, approve, merge, close, or delete anything: those stay the user's calls.
-3. Never `git push`. See the `git-conventions` skill.
+3. Never `git push`. See the [`git-conventions`](../git-conventions/SKILL.md) skill.
 4. Quote the reviewer's comment verbatim in the preview. Do not paraphrase feedback.
 5. Read the actual file around the referenced line before proposing a suggestion.
    Never suggest code from the comment text alone.

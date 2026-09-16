@@ -1,6 +1,6 @@
 ---
 name: dotnet-build
-description: "Build and test .NET projects using dotnet CLI or MSBuild. Use when the user asks to build, compile, run tests, or debug a .NET, C#, F#, .NET Core, or .NET Framework project, or when working with .sln, .csproj, or .fsproj files."
+description: "Use when the user asks to build, compile, run tests, or measure coverage on a .NET, C#, F#, .NET Core, or .NET Framework project, or when working with .sln, .csproj, or .fsproj files."
 ---
 # Build and test .NET
 
@@ -67,4 +67,10 @@ dotnet.exe test solution.sln --filter "Category!=Integration" \
   /p:CoverletOutputFormat=cobertura \
   /p:ExcludeByAttribute="GeneratedCodeAttribute"
 ```
+
+## Coverage
+
+Both test commands above emit a Cobertura report (`coverage.cobertura.xml` next to the
+test project, or in `TestResults/` for vstest). Read it to find uncovered lines and
+branches in the touched files; the [`software-engineer`](../software-engineer/SKILL.md) skill describes how to use it.
 
