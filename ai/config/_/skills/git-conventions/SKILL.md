@@ -1,6 +1,6 @@
 ---
 name: git-conventions
-description: "Git command rules, commit message conventions, and safe usage patterns. Use when the user asks to commit, create a branch, check differences, write a commit message, or perform any git operation. Also use when discussing version control workflows or git safety."
+description: "Use when the user asks to commit, stage, branch, diff, write a commit message, or perform any git operation, and when the user asks to describe or summarise a change for review, such as a merge request or pull request description (MR, PR). Also use when discussing version control workflows or git safety."
 ---
 # Git Conventions
 
@@ -8,12 +8,17 @@ description: "Git command rules, commit message conventions, and safe usage patt
 - User asks to commit, stage, diff, or perform any git operation
 - User asks to create a branch or write a commit message
 - User asks to check differences with a previous version
-- User mentions "git", "commit", "branch", "diff", or "version control"
+- User asks to describe or summarise a change for review (merge request, pull request)
+- User mentions "git", "commit", "branch", "diff", "MR", "PR", or "version control"
 - User is ready to commit after completing a task
 
 ## Overview
 
-Rules for safe and consistent git usage.
+Rules for safe and consistent git usage, from the commit to the change description.
+
+Platform-specific tooling lives in its own skill: for GitLab (`glab`), see the
+`gitlab-review` skill. Reviewing code or answering review feedback is the
+`code-review` skill.
 
 ## Rules
 Before committing, the code must compile and tests must be successful without failing / ignored tests.
@@ -37,3 +42,11 @@ A git commit message must start with:
 - `chore:` to cleanup the codebase, removing dead code
 - `doc:` when touching to .md files or documentation
 - `test:` when touching test only
+
+## Change description
+
+When asked to describe a change for review, whatever the platform calls it (merge
+request, pull request):
+
+1. Prepare a concise markdown description of the work done.
+2. Copy the description content by using clip.exe (windows tool) without introducing complex symbols.

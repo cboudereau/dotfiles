@@ -29,8 +29,8 @@ This persona combines the following core skills:
 2. [TDD](../tdd/SKILL.md) - test driven development methodology
 3. [Code Quality](../code-quality/SKILL.md) - code quality principles
 4. [Test Code Coverage](../test-code-coverage/SKILL.md) - verify code coverage
-5. [Git Conventions](../git-conventions/SKILL.md) - git command rules and commit messages
-6. [Merge Request](../merge-request/SKILL.md) - prepare merge request descriptions
+5. [Git Conventions](../git-conventions/SKILL.md) - git command rules, commit messages, change descriptions
+6. [Code Review](../code-review/SKILL.md) - review checklist and answering review feedback
 
 ## Language-specific extensions
 
