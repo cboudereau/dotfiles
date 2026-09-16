@@ -9,6 +9,7 @@ ni is a Claude Code plugin that lives in the skills directory. Copied to `~/.cla
 |---|---|
 | `.claude-plugin/plugin.json` | Plugin manifest, name `ni` |
 | `commands/` | Slash commands, invoked as `/ni:<command>` |
+| `scripts/` | Hook scripts behind the terse reply mode |
 | `skills/` | The skills, invoked as `ni:<skill>` |
 
 ## Install
@@ -20,9 +21,21 @@ claude plugin validate ./ai/config/claude/skills/ni
 claude --plugin-dir ./ai/config/claude/skills/ni   # load from the working tree
 ```
 
+## Terse mode
+ni injects a terse reply ruleset at session start and reminds Claude every turn, so replies stay short even after context compaction. Adapted from [caveman](https://github.com/juliusbrussee/caveman) (MIT), with two levels only.
+
+| Level | Effect |
+|---|---|
+| `lite` | Default. No filler, hedging, preamble, or recap. Full sentences kept. |
+| `full` | Also drops articles, allows fragments. |
+| `off` | Nothing injected. |
+
+Switch with `/ni:terse lite|full|off`. The level persists in `~/.claude/ni/terse`. Commits, docs, MR text, and security warnings always stay in normal prose.
+
 ## Skills
 | Skill | Use when |
 |---|---|
+| `ni:terse` | The terse ruleset itself, for reference or manual invocation |
 | `ni:software-engineer` | Implementing, fixing, or refactoring with the plan, test, implement, commit workflow |
 | `ni:tdd` | Writing tests first, red-green-refactor |
 | `ni:plan` | Multi-session work with a durable workspace, design doc, and ADRs |
