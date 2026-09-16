@@ -6,7 +6,7 @@
     "name": "Clément Boudereau",
     "email": "cboudereau@gmail.com"
   },
-  "homepage": "https://github.com/cboudereau/dotfiles",
+  "homepage": "https://github.com/cboudereau/dotfiles/tree/main/ai/config/claude",
   "repository": "https://github.com/cboudereau/dotfiles",
   "license": "Apache-2.0",
   "keywords": [
