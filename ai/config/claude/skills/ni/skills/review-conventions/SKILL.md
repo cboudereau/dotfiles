@@ -43,11 +43,48 @@ When the diff is under 50 changed lines, run step 2 inline instead of with subag
    - Subagent 2: Performance, Data Structures, Security, Correctness, Cross-cutting (items 17-36)
 
    Each subagent reads the actual code around every finding and returns one line per
-   finding: checklist item, `file:line`, what is wrong, why it matters, suggested fix.
+   finding in the format below, prefixed with the checklist item number.
    No finding without a `file:line`.
 3. **Merge and report once.** Drop checklist findings the built-in review already
    reported, dedupe across the two subagents, rank by severity, and report in one
    message. Say which step each finding came from.
+
+For a quick bug pass on a diff without the checklist, spawn the `ni:reviewer` agent
+instead. It returns the same one-line format and nothing else.
+
+## Finding format
+
+One line per finding. Location, problem, fix. No throat-clearing.
+
+Format: `file:L42: <severity>: <problem>. <fix>.` Multi-file diffs always carry the file.
+
+| Severity | Use for |
+|---|---|
+| `bug` | Wrong output, crash, security hole, data loss |
+| `risk` | Works but fragile: race, leak, missing guard, perf cliff |
+| `nit` | Style, naming, micro-optimisation. The author can ignore it |
+| `q` | Genuine question. Use it instead of hedging |
+
+Drop: "I noticed that", "it seems like", "you might want to consider", "this is just a
+suggestion" (use `nit`), praise per comment (say it once at the top), restating what the
+line does, hedging ("perhaps", "maybe", "I think": use `q`).
+
+Keep: exact line numbers, exact symbol names in backticks, a concrete fix rather than
+"consider refactoring", and the why when the fix is not obvious from the problem.
+
+Examples:
+
+- Not: "I noticed that on line 42 you're not checking if the user object is null before
+  accessing the email property. This could cause a crash. You might want to add a null check."
+- Yes: `src/user.ts:L42: bug: user can be null after .find(). Add guard before .email.`
+- Yes: `src/order.ts:L88-140: nit: 50-line function does 4 things. Extract validate, normalise, persist.`
+- Yes: `src/client.ts:L23: risk: no retry on 429. Wrap in withBackoff(3).`
+
+Full prose instead of one line for: security findings (state the risk and a reference),
+architectural disagreements (rationale needed), and an author new to the codebase who
+needs the why. Write the paragraph, then resume the one-line format.
+
+Adapted from the MIT-licensed caveman-review skill by Julius Brussee.
 
 ## Checklist
 

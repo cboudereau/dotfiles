@@ -8,6 +8,7 @@ ni is a Claude Code plugin that lives in the skills directory. Copied to `~/.cla
 | Path | Purpose |
 |---|---|
 | `.claude-plugin/plugin.json` | Plugin manifest, name `ni` |
+| `agents/` | Subagents with compressed output, spawned as `ni:<agent>` |
 | `commands/` | Slash commands, invoked as `/ni:<command>` |
 | `scripts/` | Hook scripts behind the terse reply mode |
 | `skills/` | The skills, invoked as `ni:<skill>` |
@@ -45,3 +46,14 @@ Switch with `/ni:terse lite|full|off`. The level persists in `~/.claude/ni/terse
 | `ni:evidence-based-analysis` | Any claim about the codebase, cited by file and line |
 
 Run `/ni:help` inside Claude for the same list.
+
+## Agents
+Subagent results land in the main context verbatim, so these three return structured one-liners instead of prose. Adapted from caveman's cavecrew (MIT).
+
+| Agent | Use for | Returns |
+|---|---|---|
+| `ni:investigator` | Where is X defined, what calls Y, map this directory | `path:line - symbol - note` rows |
+| `ni:builder` | Surgical edit of 1 or 2 known files | Diff receipt, or `too-big.` / `ambiguous.` |
+| `ni:reviewer` | Findings-only review of a diff, branch, or file | `path:L42: severity: problem. fix.` rows |
+
+Rule of thumb: want the result in a third of the tokens, pick ni. Want prose, pick the vanilla agent.

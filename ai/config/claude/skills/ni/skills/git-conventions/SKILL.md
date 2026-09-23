@@ -33,7 +33,13 @@ Before committing, the code must compile and tests must be successful without fa
 
 ## Commit message
 
-A git commit message must start with:
+Terse and exact. Why over what: the diff already says what changed.
+
+### Subject
+
+`<type>(<scope>): <imperative summary>`, scope optional.
+
+Types:
 
 - `feat:` for feature
 - `fix:` when fixing the codebase
@@ -41,6 +47,48 @@ A git commit message must start with:
 - `chore:` to cleanup the codebase, removing dead code
 - `doc:` when touching to .md files or documentation
 - `test:` when touching test only
+- `perf:` for a measured performance change
+- `build:` or `ci:` for build tooling or pipeline changes
+- `revert:` when reverting a prior commit
+
+Rules: imperative mood ("add", "fix", "remove", never "added" or "adds"), 50 characters
+when possible and 72 at most, no trailing period, no restating the file name when the
+scope already says it. Match the project convention for capitalisation after the colon.
+
+### Body
+
+Skip it when the subject is self-explanatory. Add one only for a non-obvious why, a
+breaking change, migration notes, or linked issues. Wrap at 72 characters, bullets with
+`-`, issue references last (`Closes #42`, `Refs #17`).
+
+Always add a body for: breaking changes, security fixes, data migrations, and reverts.
+Future debuggers need the context.
+
+Never in a commit message: "this commit does", "I", "we", "now", "currently", "as
+requested by" (use a `Co-authored-by` trailer), AI attribution, emoji unless the project
+convention requires it.
+
+Examples:
+
+- Not: `feat: add a new endpoint to get user profile information from the database`
+- Yes:
+  ```
+  feat(api): add GET /users/:id/profile
+
+  Mobile client needs profile data without the full user payload
+  to reduce LTE bandwidth on cold-launch screens.
+
+  Closes #128
+  ```
+- Breaking change:
+  ```
+  feat(api)!: rename /v1/orders to /v1/checkout
+
+  BREAKING CHANGE: clients on /v1/orders must migrate to /v1/checkout
+  before 2026-06-01. Old route returns 410 after that date.
+  ```
+
+Adapted from the MIT-licensed caveman-commit skill by Julius Brussee.
 
 ## Change description
 
