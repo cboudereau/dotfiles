@@ -16,9 +16,9 @@ description: "Use when the user asks to commit, stage, branch, diff, write a com
 
 Rules for safe and consistent git usage, from the commit to the change description.
 
-Platform-specific tooling lives in its own skill: for GitLab (`glab`), see the
-[`gitlab-review`](../gitlab-review/SKILL.md) skill. Reviewing code or answering review feedback is the
-[`review-conventions`](../review-conventions/SKILL.md) skill.
+Reviewing code or answering review feedback is the
+[`code-review`](../code-review/SKILL.md) skill. GitLab (`glab`) commands live in its
+[gitlab.md](../code-review/gitlab.md) reference file.
 
 ## Rules
 Before committing, the code must compile and tests must be successful without failing / ignored tests.

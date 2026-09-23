@@ -1,21 +1,15 @@
----
-name: gitlab-review
-description: "Use when working with a GitLab merge request through the glab CLI: reading MR review comments or discussions, listing unresolved threads, posting replies or code suggestions on an MR, resolving threads, or checking glab auth. Also use when the user mentions glab, GitLab MR discussions, or GitLab suggestion blocks."
----
 # GitLab Review
 
-## When to use
-- User asks to read comments or threads on a GitLab merge request
-- User asks to post replies, code suggestions, or resolve threads on an MR
-- User mentions `glab`, GitLab MR discussions, or unresolved threads
-- User asks to set up or troubleshoot `glab`
+Reference file of the [`code-review`](SKILL.md) skill. Read it when the review lives on
+a GitLab merge request: reading threads, posting replies or suggestions, resolving
+threads, or troubleshooting `glab`.
 
 ## Overview
 
 GitLab-specific tooling for the review flow. It provides the `glab` commands and API
 calls; the flow itself is not here.
 
-**REQUIRED BACKGROUND:** the [`review-conventions`](../review-conventions/SKILL.md) skill defines the flow (read -> preview ->
+**REQUIRED BACKGROUND:** the [`code-review`](SKILL.md) skill defines the flow (read -> preview ->
 approve -> post + resolve), the preview format, the Disposition rules, and the red
 flags. Load it first. Git rules (never push) are in the [`git-conventions`](../git-conventions/SKILL.md) skill.
 
@@ -102,7 +96,7 @@ glab api --method PUT "projects/<project-id>/merge_requests/<iid>/discussions/<d
 Get `<project-id>` once with `glab repo view -F json --jq .id`, or use the URL-encoded
 path (`d-edge%2F...`). Requires the full discussion id, not the eight-character prefix.
 
-**3. Verify** before reporting, as the [`review-conventions`](../review-conventions/SKILL.md) skill requires:
+**3. Verify** before reporting, as the [`code-review`](SKILL.md) skill requires:
 
 ```bash
 glab mr note list <iid> -F json --jq '[.[] | {id, resolved: ([.notes[] | select(.system==false) | .resolved] | any)}]'

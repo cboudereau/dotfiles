@@ -1,8 +1,8 @@
 ---
-name: review-conventions
-description: "Use when the user asks for a full review of a change, pull request, or merge request against the personal checklist, covering design, tests, performance, security, and correctness. Also use when the user asks to read, address, answer, or reply to reviewer comments or threads, or to prepare a plan from reviewer feedback, on any platform."
+name: code-review
+description: "Use when the user asks for a full review of a change, pull request, or merge request against the personal checklist, covering design, tests, performance, security, and correctness. Also use when the user asks to read, address, answer, or reply to reviewer comments or threads, or to prepare a plan from reviewer feedback, on any platform, including GitLab merge requests through glab: MR discussions, unresolved threads, suggestion blocks, glab auth."
 ---
-# Review Conventions
+# Code Review
 
 > Based on "What to look for in a code review" by Trisha Gee (Java Champion, JetBrains) and [personal notes](https://cboudereau.github.io/bookworm/2023-01-23_Code_Review/)
 
@@ -25,8 +25,8 @@ Two sides of a review, both language- and platform-agnostic:
 2. **Answering a review** — the flow in "Answering review feedback". Read, preview,
    get approval, then write. Never write first.
 
-Platform commands (reading threads, posting replies, resolving) live in a platform
-skill: for GitLab, load the [`gitlab-review`](../gitlab-review/SKILL.md) skill. Git rules (no push, commit
+Platform commands (reading threads, posting replies, resolving) live in a reference
+file: for GitLab, read [gitlab.md](gitlab.md). Git rules (no push, commit
 messages) are in the [`git-conventions`](../git-conventions/SKILL.md) skill.
 
 ## Giving a review
@@ -215,7 +215,7 @@ Column rules:
 - **Reviewer comment** is quoted verbatim, trimmed with `...` only when long.
 - **Suggestion** is the range plus the replacement when it fits one line, otherwise a
   summary; the full fenced block goes in the markdown file or the note body. The range
-  syntax is platform-specific (see the platform skill).
+  syntax is platform-specific (see [gitlab.md](gitlab.md)).
 - **Resolve?** is `yes` for `reply + resolve`, or `no - reason` for `reply only` and
   `leave open`. It maps to the Disposition below.
 
@@ -265,7 +265,7 @@ If the user narrows or overrides a disposition in their answer, theirs wins.
 
 Post the replies, resolve the approved threads, then verify and report in one message:
 the posted note ids, which threads are now resolved, and which stay open with the
-reason from their disposition. The commands are in the platform skill.
+reason from their disposition. The commands are in [gitlab.md](gitlab.md).
 
 ### Red flags - the write is not finished
 

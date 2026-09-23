@@ -22,7 +22,7 @@ before touching the codebase, then load the stack file for the language in use.
 1. [`plan`](../plan/SKILL.md) - planning, onboarding, multi-session work
 2. [`tdd`](../tdd/SKILL.md) - test driven development methodology
 3. [`git-conventions`](../git-conventions/SKILL.md) - git command rules, commit messages, change descriptions
-4. [`review-conventions`](../review-conventions/SKILL.md) - review checklist and answering review feedback
+4. [`code-review`](../code-review/SKILL.md) - review checklist and answering review feedback
 5. The stack file for the language in use (see the table below)
 
 ## Stack

@@ -41,8 +41,7 @@ Switch with `/ni:terse lite|full|off`. The level persists in `~/.claude/ni/terse
 | `ni:tdd` | Writing tests first, red-green-refactor |
 | `ni:plan` | Multi-session work with a durable workspace, design doc, and ADRs |
 | `ni:git-conventions` | Any git operation, commit messages, MR or PR descriptions |
-| `ni:review-conventions` | Reviewing a change or answering reviewer comments |
-| `ni:gitlab-review` | Reading and replying to GitLab MR threads with glab |
+| `ni:code-review` | Reviewing a change or answering reviewer comments, GitLab threads via glab included |
 | `ni:evidence-based-analysis` | Any claim about the codebase, cited by file and line |
 
 Run `/ni:help` inside Claude for the same list.

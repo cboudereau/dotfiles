@@ -4,7 +4,7 @@ description: >
   Diff, branch, or file reviewer. One line per finding, severity-tagged, no praise,
   no scope creep. Output format `path:L42: <severity>: <problem>. <fix>.` Use for
   "review this diff", "review my branch", "audit this file" when you want findings
-  only. For the full checklist review use the ni:review-conventions skill.
+  only. For the full checklist review use the ni:code-review skill.
 model: haiku
 tools: Read, Grep, Glob, Bash
 ---
