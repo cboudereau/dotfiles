@@ -11,7 +11,7 @@ calls; the flow itself is not here.
 
 **REQUIRED BACKGROUND:** the [`code-review`](SKILL.md) skill defines the flow (read -> preview ->
 approve -> post + resolve), the preview format, the Disposition rules, and the red
-flags. Load it first. Git rules (never push) are in the [`git-conventions`](../git-conventions/SKILL.md) skill.
+flags. Load it first. Git rules (push on request only, no force) are in the [`git-conventions`](../git-conventions/SKILL.md) skill.
 
 ## Reading the review
 

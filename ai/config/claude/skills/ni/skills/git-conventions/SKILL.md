@@ -25,7 +25,7 @@ Before committing, the code must compile and tests must be successful without fa
 
 ## Command rules
 
-1. Never use the command `push`.
+1. Push only when the user asks for it in the current turn. Never push on your own after a commit. Push the current branch to its upstream, never to `master` or `main` directly.
 2. Never use the option `force` `--force`.
 3. Never amend commit to modify files, prefer adding more commits (fix commit) and explain the error/reason.
 4. Do not hesitate to use git when checking differences with the previous version.

@@ -26,7 +26,7 @@ Two sides of a review, both language- and platform-agnostic:
    get approval, then write. Never write first.
 
 Platform commands (reading threads, posting replies, resolving) live in a reference
-file: for GitLab, read [gitlab.md](gitlab.md). Git rules (no push, commit
+file: for GitLab, read [gitlab.md](gitlab.md). Git rules (push on request only, commit
 messages) are in the [`git-conventions`](../git-conventions/SKILL.md) skill.
 
 ## Giving a review
@@ -175,7 +175,7 @@ For any review, confirm which skills were used before.
 2. Resolve every approved thread whose preview **Disposition** said `reply + resolve`.
    This is required, not optional, and happens in the same pass as the reply.
    Never unresolve, approve, merge, close, or delete anything: those stay the user's calls.
-3. Never `git push`. See the [`git-conventions`](../git-conventions/SKILL.md) skill.
+3. Push only on explicit request. See the [`git-conventions`](../git-conventions/SKILL.md) skill.
 4. Quote the reviewer's comment verbatim in the preview. Do not paraphrase feedback.
 5. Read the actual file around the referenced line before proposing a suggestion.
    Never suggest code from the comment text alone.
