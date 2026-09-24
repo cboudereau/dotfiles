@@ -10,6 +10,6 @@ This folder mirrors `~/.claude/`. Skills ship as the [ni plugin](skills/ni/READM
 
 ## install
 ```bash
-rm -rf ~/.claude/skills   # remove renamed or deleted skills
+rm -rf ~/.claude/skills/ni   # remove renamed or deleted skills, keep other skill folders
 cp -r ai/config/claude/{skills,settings.json,statusline-command.sh} ~/.claude/
 ```

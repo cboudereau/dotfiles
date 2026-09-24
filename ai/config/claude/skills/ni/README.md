@@ -48,6 +48,15 @@ Switch with `/ni:terse lite|full|off`. The level persists in `~/.claude/ni/terse
 
 Run `/ni:help` inside Claude for the same list.
 
+## Commands
+User-invoked only; none loads on its own.
+
+| Command | Does |
+|---|---|
+| `/ni:help` | List the ni skills |
+| `/ni:terse` | Set the terse reply level |
+| `/ni:review-loop` | Review MRs assigned to me in a /loop, post findings, report the links |
+
 ## Agents
 Subagent results land in the main context verbatim, so these three return structured one-liners instead of prose. Adapted from caveman's cavecrew (MIT).
 
