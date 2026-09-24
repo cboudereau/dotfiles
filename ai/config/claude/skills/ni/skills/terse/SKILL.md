@@ -1,6 +1,6 @@
 ---
 name: terse
-description: "Terse reply style that cuts filler while keeping every technical fact. Use when the user asks to be brief, use fewer tokens, stop the filler, talk terse, or runs /ni:terse. Levels: lite, full, off."
+description: "Use when the user asks to be brief, shorter, use fewer tokens, cut the filler, talk terse or caveman, or runs /ni:terse. Also use when asked which terse level is active or what lite, full, and off mean."
 ---
 # Terse
 

@@ -21,9 +21,10 @@ before touching the codebase, then load the stack file for the language in use.
 
 1. [`plan`](../plan/SKILL.md) - planning, onboarding, multi-session work
 2. [`tdd`](../tdd/SKILL.md) - test driven development methodology
-3. [`git-conventions`](../git-conventions/SKILL.md) - git command rules, commit messages, change descriptions
-4. [`code-review`](../code-review/SKILL.md) - review checklist and answering review feedback
-5. The stack file for the language in use (see the table below)
+3. [`debug`](../debug/SKILL.md) - root cause before any fix
+4. [`git-conventions`](../git-conventions/SKILL.md) - git command rules, commit messages, change descriptions
+5. [`code-review`](../code-review/SKILL.md) - review checklist and answering review feedback
+6. The stack file for the language in use (see the table below)
 
 ## Stack
 
@@ -37,9 +38,10 @@ Load the matching file for language specifics and the build, test, lint, and cov
 ## Workflow
 
 1. Plan ([`plan`](../plan/SKILL.md) skill)
-2. Test ([`tdd`](../tdd/SKILL.md) skill, or "Test after" below for existing code)
-3. Implement (code quality rules below, stack file commands)
-4. Commit ([`git-conventions`](../git-conventions/SKILL.md) skill)
+2. Bug only: find the root cause first ([`debug`](../debug/SKILL.md) skill)
+3. Test ([`tdd`](../tdd/SKILL.md) skill, or "Test after" below for existing code)
+4. Implement (code quality rules below, stack file commands)
+5. Commit ([`git-conventions`](../git-conventions/SKILL.md) skill)
 
 Files already tracked in git can be deleted freely: git undoes it.
 

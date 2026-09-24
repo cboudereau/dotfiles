@@ -167,7 +167,7 @@ Phase 4 has three sub-phases that must be completed in order.
 
 Before writing any task, explore the codebase to ground the plan in reality.
 
-**Delegate this — do not explore inline.** Fan out read-only `Explore` subagents **in parallel**, one per axis below. Each returns structured findings; the orchestrator synthesizes them into the `## Analysis` section of TASKS.md (see template below for format). Parallel exploration keeps the orchestrator's context small and shortens wall-clock time. Axes (one subagent each):
+**Delegate this — do not explore inline.** Fan out read-only `Explore` or `ni:investigator` subagents **in parallel**, one per axis below. Findings follow the [`evidence-based-analysis`](../evidence-based-analysis/SKILL.md) skill: every claim cites `file:line`. Each returns structured findings; the orchestrator synthesizes them into the `## Analysis` section of TASKS.md (see template below for format). Parallel exploration keeps the orchestrator's context small and shortens wall-clock time. Axes (one subagent each):
 
 - **Build & test commands**: exact commands to build, test, lint, format
 - **Domain model**: types/structs with attributes, relationships, and requirement traceability

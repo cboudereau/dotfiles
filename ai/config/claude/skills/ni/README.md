@@ -39,10 +39,12 @@ Switch with `/ni:terse lite|full|off`. The level persists in `~/.claude/ni/terse
 | `ni:terse` | The terse ruleset itself, for reference or manual invocation |
 | `ni:software-engineer` | Implementing, fixing, or refactoring with the plan, test, implement, commit workflow; Rust and .NET build, test, and coverage commands |
 | `ni:tdd` | Writing tests first, red-green-refactor |
+| `ni:debug` | Any failure or bug, before proposing a fix |
 | `ni:plan` | Multi-session work with a durable workspace, design doc, and ADRs |
 | `ni:git-conventions` | Any git operation, commit messages, MR or PR descriptions |
 | `ni:code-review` | Reviewing a change or answering reviewer comments, GitLab threads via glab included |
 | `ni:evidence-based-analysis` | Any claim about the codebase, cited by file and line |
+| `ni:skill` | Creating or editing a ni skill, agent, or command |
 
 Run `/ni:help` inside Claude for the same list.
 
