@@ -1,4 +1,11 @@
 function cloclo () {
     local name=$1
-    claude -n ${name}
+    shift
+    claude -n "${name}" "$@"
+}
+
+function clw () {
+    local name=$1
+    shift
+    claude --worktree "${name}" -n "${name}" "$@"
 }
