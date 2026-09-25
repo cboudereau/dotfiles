@@ -2,5 +2,6 @@
 
 ## install
 ```bash
-cp -r ai/config/_/skills ~/.cursor/
+git clone --depth 1 https://github.com/itsaspacestation/natural-intelligence /tmp/ni
+cp -r /tmp/ni/skills ~/.cursor/
 ```
