@@ -4,6 +4,12 @@ function cloclo () {
     claude -n "${name}" "$@"
 }
 
+function cl () {
+    local name=$1
+    shift
+    claude -n "${name}" "$@"
+}
+
 function clw () {
     local name=$1
     shift

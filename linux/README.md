@@ -20,6 +20,6 @@ sudo apt install rocm-smi
 
 ## linux bash aliases
 ```bash
-cp linux/.bash_aliases linux/.dotenv linux/.gitconfig ~
+cp linux/.bash_aliases linux/.dotenv linux/.gitconfig linux/.cloclo ~
 pushd ~ && . .bash_aliases && popd
 ```
