@@ -1,9 +1,10 @@
 rename-session clem
-split-window -v
-split-window -v
-split-window -v
-split-window -v
-split-window -v
+set -F @wd "#{pane_current_path}"
+split-window -v -c "#{@wd}"
+split-window -v -c "#{@wd}"
+split-window -v -c "#{@wd}"
+split-window -v -c "#{@wd}"
+split-window -v -c "#{@wd}"
 select-layout tiled
 selectp -t 0
 display "Welcome on board clem!"

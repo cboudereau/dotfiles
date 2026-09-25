@@ -1,7 +1,8 @@
-rename-session docker
-split-window -v -c "#{pane_current_path}" /usr/bin/btop
+rename-session linux
+set -F @wd "#{pane_current_path}"
+split-window -v -c "#{@wd}" /usr/bin/btop
 resizep -x 80 -y 35 -t 1
-split-window -h -c "#{pane_current_path}"
-split-window -v -c "#{pane_current_path}"
+split-window -h -c "#{@wd}"
+split-window -v -c "#{@wd}"
 select-pane -t 0
 display "Welcome on board clem!"

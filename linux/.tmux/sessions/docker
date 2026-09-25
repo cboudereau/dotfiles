@@ -1,9 +1,10 @@
 rename-session docker
+set -F @wd "#{pane_current_path}"
 send-keys C-z '/usr/bin/btop' Enter
-split-window -v -c "#{pane_current_path}"
-split-window -h -c "#{pane_current_path}" -t 0 /usr/bin/docker stats
+split-window -v -c "#{@wd}"
+split-window -h -c "#{@wd}" -t 0 /usr/bin/docker stats
 resizep -x 80 -y 35 -t 0
-split-window -v -c "#{pane_current_path}"
-split-window -v -c "#{pane_current_path}"
+split-window -v -c "#{@wd}"
+split-window -v -c "#{@wd}"
 select-pane -t 4
 display "Welcome on board clem!"
