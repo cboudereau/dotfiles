@@ -2,5 +2,6 @@
 
 ## install
 ```bash
-cp -r ai/config/claude/skills/ni/skills ~/.gemini/
+git clone --depth 1 https://github.com/itsaspacestation/natural-intelligence /tmp/ni
+cp -r /tmp/ni/skills ~/.gemini/
 ```

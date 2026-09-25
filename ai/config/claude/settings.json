@@ -12,9 +12,18 @@
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "rust-analyzer-lsp@claude-plugins-official": true
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "ni@itsaspacestation": true
   },
   "effortLevel": "high",
   "autoMemoryEnabled": false,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "extraKnownMarketplaces": {
+    "itsaspacestation": {
+      "source": {
+        "source": "github",
+        "repo": "itsaspacestation/claude-marketplace"
+      }
+    }
+  }
 }

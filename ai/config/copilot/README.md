@@ -2,7 +2,8 @@
 
 ## install
 ```bash
-cp -r ai/config/claude/skills/ni/skills ~/.copilot/
+git clone --depth 1 https://github.com/itsaspacestation/natural-intelligence /tmp/ni
+cp -r /tmp/ni/skills ~/.copilot/
 ```
 
 in copilot run
