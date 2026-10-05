@@ -6,7 +6,9 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
+  "worktree": {
+    "baseRef": "fresh"
+  },
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
@@ -15,9 +17,6 @@
     "rust-analyzer-lsp@claude-plugins-official": true,
     "ni@itsaspacestation": true
   },
-  "effortLevel": "high",
-  "autoMemoryEnabled": false,
-  "skipAutoPermissionPrompt": true,
   "extraKnownMarketplaces": {
     "itsaspacestation": {
       "source": {
@@ -25,5 +24,11 @@
         "repo": "itsaspacestation/claude-marketplace"
       }
     }
-  }
+  },
+  "outputStyle": "Concise",
+  "effortLevel": "high",
+  "autoMemoryEnabled": false,
+  "editorMode": "vim",
+  "preferredNotifChannel": "auto",
+  "skipAutoPermissionPrompt": true
 }
